@@ -10,6 +10,7 @@
     "preview": "vite preview",
     "cli": "tsx cli/index.ts",
     "fetch": "tsx cli/index.ts",
+    "update": "tsx cli/index.ts update",
     "remove": "tsx cli/index.ts remove"
   },
   "dependencies": {

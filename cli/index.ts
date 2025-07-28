@@ -340,6 +340,82 @@ async function confirmRemoval(tag: string): Promise<boolean> {
   });
 }
 
+async function updateTag(tag: string): Promise<void> {
+  console.log(`🔄 Updating tag: ${tag}`);
+  
+  // Check if tag data exists
+  const dataFile = join(DATA_DIR, `${tag}.json`);
+  let tagExists = false;
+  
+  try {
+    await fs.access(dataFile);
+    tagExists = true;
+    console.log(`📁 Found existing data for tag: ${tag}`);
+  } catch {
+    console.log(`📄 No existing data for tag: ${tag}, will fetch fresh data`);
+  }
+  
+  // Always backup existing data before updating
+  if (tagExists) {
+    await ensureBackupDirectory();
+    await backupTagData(tag);
+  }
+  
+  // Fetch (or re-fetch) the submissions
+  await fetchSubmissions(tag);
+}
+
+async function updateAllTags(): Promise<void> {
+  const existingTags = await getExistingTags();
+  
+  if (existingTags.length === 0) {
+    console.log('❌ No existing tags found. Use fetch command to add some tags first:');
+    console.log('   pnpm run fetch <tag-name>');
+    return;
+  }
+  
+  console.log(`🔄 Updating all ${existingTags.length} existing tags...`);
+  
+  for (let i = 0; i < existingTags.length; i++) {
+    const tag = existingTags[i];
+    console.log(`\n[${i + 1}/${existingTags.length}] Updating: ${tag}`);
+    
+    try {
+      await updateTag(tag);
+      console.log(`✅ Updated: ${tag}`);
+      
+      // Add a small delay between updates to be respectful to the API
+      if (i < existingTags.length - 1) {
+        console.log('⏳ Waiting 2 seconds before next update...');
+        await new Promise(resolve => setTimeout(resolve, 2000));
+      }
+    } catch (error) {
+      console.error(`❌ Failed to update tag: ${tag}`, error);
+      console.log('⏭️  Continuing with next tag...');
+    }
+  }
+  
+  console.log(`\n🎉 Finished updating all tags!`);
+}
+
+async function updateCommand(specificTag?: string): Promise<void> {
+  try {
+    await ensureDataDirectory();
+    
+    if (specificTag) {
+      // Update specific tag
+      await updateTag(specificTag);
+      console.log(`\n✅ Successfully updated tag: ${specificTag}`);
+    } else {
+      // Update all existing tags
+      await updateAllTags();
+    }
+  } catch (error) {
+    console.error('❌ Update failed:', error);
+    process.exit(1);
+  }
+}
+
 async function removeTag(): Promise<void> {
   try {
     const availableTags = await getExistingTags();
@@ -381,15 +457,22 @@ function printUsage(): void {
   console.log(`
 Usage: 
   npm run fetch <tag>     - Fetch submissions for a challenge tag
+  npm run update [tag]    - Update already fetched challenge data
   npm run remove          - Remove a tag (interactive)
 
 Examples:
   npm run fetch hacktoberfestchallenge
-  npm run fetch algoliachallenge
-  npm run fetch reactchallenge
+  npm run update                        # Updates all existing tags
+  npm run update algoliachallenge       # Updates specific tag
   npm run remove
 
-Requirements for fetch:
+Update command:
+  - Without tag: Updates all existing tags (refetches all data)
+  - With tag: Updates specific tag (refetches that tag's data)
+  - If tag data doesn't exist, will fetch it fresh
+  - Creates backup before updating
+
+Requirements for fetch/update:
   - Tag must end with "challenge" (e.g., "hacktoberfestchallenge")
   - Cannot fetch "devchallenge" directly (use specific challenge tags instead)
   - Only submissions with "devchallenge" tag will be included
@@ -397,10 +480,13 @@ Requirements for fetch:
 Fetch will download challenge submissions with the specified tag from dev.to,
 filter for valid contest entries, and save them directly to ./public/data/<tag>.json.
 
+Update will re-fetch existing tags to get the latest submissions, creating
+backups before updating the data.
+
 Remove will interactively let you select and remove a tag, creating
 a backup in ./backup/ before removing from ./public/data/
 
-The web app will automatically reflect changes when you fetch or remove tags.
+The web app will automatically reflect changes when you fetch, update, or remove tags.
 `);
 }
 
@@ -417,6 +503,13 @@ async function main(): Promise<void> {
   // Handle remove command
   if (command === 'remove' || command === '--remove' || command === '-r') {
     await removeTag();
+    return;
+  }
+  
+  // Handle update command
+  if (command === 'update' || command === '--update' || command === '-u') {
+    const specificTag = args[1]; // Optional second argument for specific tag
+    await updateCommand(specificTag);
     return;
   }
   
