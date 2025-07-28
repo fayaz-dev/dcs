@@ -5,7 +5,8 @@ import { join } from 'path';
 import { ForemArticle, TagData } from '../src/types/index.js';
 
 const FOREM_API_BASE = 'https://dev.to/api';
-const DATA_DIR = join(process.cwd(), 'data');
+const DATA_DIR = join(process.cwd(), 'public', 'data');
+const BACKUP_DIR = join(process.cwd(), 'backup');
 
 interface CLIOptions {
   tag?: string;
@@ -74,6 +75,25 @@ async function ensureDataDirectory(): Promise<void> {
   }
 }
 
+async function ensureBackupDirectory(): Promise<void> {
+  try {
+    await fs.access(BACKUP_DIR);
+  } catch {
+    await fs.mkdir(BACKUP_DIR, { recursive: true });
+    console.log(`Created backup directory: ${BACKUP_DIR}`);
+  }
+}
+
+async function notifyWebApp(): Promise<void> {
+  // Create a timestamp file to trigger web app refresh
+  const timestampFile = join(DATA_DIR, '.refresh');
+  try {
+    await fs.writeFile(timestampFile, Date.now().toString());
+  } catch {
+    // Silent fail - web app will still work without this
+  }
+}
+
 async function saveTagData(tagData: TagData): Promise<void> {
   const filename = `${tagData.tag}.json`;
   const filepath = join(DATA_DIR, filename);
@@ -110,6 +130,61 @@ async function updateTagsIndex(tags: string[]): Promise<void> {
   }
 }
 
+async function getExistingTags(): Promise<string[]> {
+  const indexPath = join(DATA_DIR, 'tags.json');
+  
+  try {
+    const data = await fs.readFile(indexPath, 'utf-8');
+    return JSON.parse(data);
+  } catch {
+    return [];
+  }
+}
+
+async function removeTagFromIndex(tagToRemove: string): Promise<void> {
+  const indexPath = join(DATA_DIR, 'tags.json');
+  
+  try {
+    const existingTags = await getExistingTags();
+    const updatedTags = existingTags.filter(tag => tag !== tagToRemove);
+    
+    await fs.writeFile(indexPath, JSON.stringify(updatedTags, null, 2));
+    console.log(`Updated tags index, removed: ${tagToRemove}`);
+  } catch (error) {
+    console.error('Error updating tags index:', error);
+    throw error;
+  }
+}
+
+async function backupTagData(tag: string): Promise<void> {
+  const sourceFile = join(DATA_DIR, `${tag}.json`);
+  const backupFile = join(BACKUP_DIR, `${tag}_${Date.now()}.json`);
+  
+  try {
+    await fs.access(sourceFile);
+    await fs.copyFile(sourceFile, backupFile);
+    console.log(`📦 Backed up ${tag}.json to ${backupFile}`);
+  } catch (error) {
+    console.log(`⚠️  No data file found for tag: ${tag}`);
+  }
+}
+
+async function removeTagFiles(tag: string): Promise<void> {
+  const dataFile = join(DATA_DIR, `${tag}.json`);
+  
+  const removeFile = async (filePath: string, location: string) => {
+    try {
+      await fs.access(filePath);
+      await fs.unlink(filePath);
+      console.log(`🗑️  Removed ${tag}.json from ${location}`);
+    } catch {
+      console.log(`ℹ️  No ${tag}.json found in ${location}`);
+    }
+  };
+  
+  await removeFile(dataFile, 'public/data directory');
+}
+
 async function fetchSubmissions(tag: string): Promise<void> {
   const client = new ForemAPIClient();
   
@@ -124,6 +199,7 @@ async function fetchSubmissions(tag: string): Promise<void> {
     
     await saveTagData(tagData);
     await updateTagsIndex([tag]);
+    await notifyWebApp();
     
     console.log(`✅ Successfully fetched and saved ${articles.length} submissions for tag: ${tag}`);
   } catch (error) {
@@ -132,17 +208,108 @@ async function fetchSubmissions(tag: string): Promise<void> {
   }
 }
 
+async function promptTagSelection(availableTags: string[]): Promise<string> {
+  console.log('\n📋 Available tags:');
+  availableTags.forEach((tag, index) => {
+    console.log(`  ${index + 1}. ${tag}`);
+  });
+  
+  const readline = await import('readline');
+  const rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout
+  });
+  
+  return new Promise((resolve, reject) => {
+    rl.question('\nEnter the number of the tag to remove (or "q" to quit): ', (answer) => {
+      rl.close();
+      
+      if (answer.toLowerCase() === 'q') {
+        console.log('Operation cancelled.');
+        process.exit(0);
+      }
+      
+      const choice = parseInt(answer);
+      if (isNaN(choice) || choice < 1 || choice > availableTags.length) {
+        reject(new Error('Invalid selection. Please enter a valid number.'));
+        return;
+      }
+      
+      resolve(availableTags[choice - 1]);
+    });
+  });
+}
+
+async function confirmRemoval(tag: string): Promise<boolean> {
+  const readline = await import('readline');
+  const rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout
+  });
+  
+  return new Promise((resolve) => {
+    rl.question(`\n⚠️  Are you sure you want to remove tag "${tag}"? This will:\n  - Create a backup in ./backup/\n  - Remove from ./data/ and ./public/data/\n  - Remove from web app\n\nType "yes" to confirm: `, (answer) => {
+      rl.close();
+      resolve(answer.toLowerCase() === 'yes');
+    });
+  });
+}
+
+async function removeTag(): Promise<void> {
+  try {
+    const availableTags = await getExistingTags();
+    
+    if (availableTags.length === 0) {
+      console.log('❌ No tags found. Fetch some submissions first using:');
+      console.log('   pnpm run fetch <tag-name>');
+      return;
+    }
+    
+    console.log(`\n🏷️  Found ${availableTags.length} available tags`);
+    
+    const tagToRemove = await promptTagSelection(availableTags);
+    const confirmed = await confirmRemoval(tagToRemove);
+    
+    if (!confirmed) {
+      console.log('Operation cancelled.');
+      return;
+    }
+    
+    console.log(`\n🚀 Removing tag: ${tagToRemove}`);
+    
+    await ensureBackupDirectory();
+    await backupTagData(tagToRemove);
+    await removeTagFiles(tagToRemove);
+    await removeTagFromIndex(tagToRemove);
+    await notifyWebApp();
+    
+    console.log(`\n✅ Successfully removed tag: ${tagToRemove}`);
+    console.log(`📦 Backup saved in ./backup/`);
+    
+  } catch (error) {
+    console.error('❌ Failed to remove tag:', error);
+    process.exit(1);
+  }
+}
+
 function printUsage(): void {
   console.log(`
-Usage: npm run fetch <tag>
+Usage: 
+  npm run fetch <tag>     - Fetch submissions for a tag
+  npm run remove          - Remove a tag (interactive)
 
 Examples:
   npm run fetch devchallenge
   npm run fetch react
-  npm run fetch typescript
+  npm run remove
 
-This will fetch all submissions with the specified tag from dev.to
-and save them to ./data/<tag>.json
+Fetch will download all submissions with the specified tag from dev.to
+and save them directly to ./public/data/<tag>.json for immediate web app use.
+
+Remove will interactively let you select and remove a tag, creating
+a backup in ./backup/ before removing from ./public/data/
+
+The web app will automatically reflect changes when you fetch or remove tags.
 `);
 }
 
@@ -154,7 +321,16 @@ async function main(): Promise<void> {
     return;
   }
   
-  const tag = args[0];
+  const command = args[0];
+  
+  // Handle remove command
+  if (command === 'remove' || command === '--remove' || command === '-r') {
+    await removeTag();
+    return;
+  }
+  
+  // Handle fetch command (default behavior)
+  const tag = command;
   
   if (!tag) {
     console.error('❌ Please provide a tag name');

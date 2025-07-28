@@ -4,13 +4,13 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "npm run copy-data && vite",
-    "build": "npm run copy-data && tsc -b && vite build",
+    "dev": "vite",
+    "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
     "cli": "tsx cli/index.ts",
     "fetch": "tsx cli/index.ts",
-    "copy-data": "tsx cli/copy-data.ts"
+    "remove": "tsx cli/index.ts remove"
   },
   "dependencies": {
     "react": "^19.1.0",

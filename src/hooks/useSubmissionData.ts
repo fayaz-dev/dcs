@@ -14,6 +14,28 @@ export function useSubmissionData() {
   // Load available tags
   useEffect(() => {
     loadAvailableTags();
+    
+    // Set up polling to check for updates
+    const interval = setInterval(async () => {
+      try {
+        const response = await fetch('/data/.refresh');
+        if (response.ok) {
+          const timestamp = await response.text();
+          const lastCheck = localStorage.getItem('lastDataCheck');
+          
+          if (!lastCheck || timestamp !== lastCheck) {
+            localStorage.setItem('lastDataCheck', timestamp);
+            await loadAvailableTags();
+            // Clear cached tag data to force reload
+            setTagData(new Map());
+          }
+        }
+      } catch {
+        // Silent fail - polling is optional
+      }
+    }, 2000); // Check every 2 seconds
+    
+    return () => clearInterval(interval);
   }, []);
 
   const loadAvailableTags = async () => {

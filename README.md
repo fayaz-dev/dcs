@@ -6,7 +6,9 @@ A modern web application for browsing dev challenge submissions from dev.to. Thi
 
 - **CLI Tool**: Fetch submissions from dev.to using the Forem API
 - **Beautiful Web Interface**: Browse submissions with sorting and search functionality
+- **Auto-refresh**: Web app automatically updates when new data is fetched or removed
 - **Responsive Design**: Works great on desktop and mobile devices
+- **Safe Operations**: Automatic backups when removing tags
 - **Modern Tech Stack**: Built with React, TypeScript, and Vite
 
 ## Technologies Used
@@ -35,8 +37,9 @@ pnpm run fetch algoliachallenge
 
 This will:
 - Fetch all submissions with the specified tag from dev.to
-- Save them as JSON files in the `./data` directory
-- Update the tags index for the web app
+- Save them directly to `./public/data/<tag>.json` for immediate web app use
+- Update the tags index automatically
+- The web app will auto-refresh to show the new tag within seconds
 
 ### 3. Start the Web App
 
@@ -54,9 +57,19 @@ The web app will be available at `http://localhost:5173`
 # Fetch submissions for a tag
 pnpm run fetch <tag-name>
 
+# Remove a tag (interactive)
+pnpm run remove
+
 # Examples
 pnpm run fetch hacktoberfestchallenge
+pnpm run remove  # Will show dropdown of existing tags
 ```
+
+The remove command will:
+- Show you a list of existing tags to choose from
+- Create a timestamped backup in `./backup/` before removal
+- Remove the tag data from `./public/data/` directory immediately
+- Update the tags index and notify the web app for instant refresh
 
 ### Web Interface
 
@@ -70,8 +83,10 @@ pnpm run fetch hacktoberfestchallenge
 
 ```
 ├── cli/                    # CLI tool for fetching data
-│   └── index.ts           # Main CLI script
-├── data/                  # Generated JSON files (created by CLI)
+│   └── index.ts           # Main CLI script (unified fetch/remove)
+├── public/
+│   └── data/              # JSON files served directly to web app
+├── backup/                # Backup files when tags are removed
 ├── src/
 │   ├── components/        # React components
 │   │   ├── TagSelector.*  # Tag selection interface
@@ -90,10 +105,11 @@ pnpm run fetch hacktoberfestchallenge
 
 ## Data Format
 
-The CLI generates the following files in the `./data` directory:
+The CLI generates JSON files directly in `./public/data/` for immediate web app access:
 
 - `tags.json`: Array of available tag names
 - `<tag>.json`: Submissions data for each tag
+- `.refresh`: Auto-refresh timestamp for live updates
 
 Example submission data structure:
 ```json
