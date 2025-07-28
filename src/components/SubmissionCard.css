@@ -82,9 +82,30 @@
   filter: brightness(0.9) saturate(1.1);
 }
 
+.card-image img.placeholder-image {
+  object-fit: cover;
+  filter: none;
+  background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-tertiary) 100%);
+  padding: 0;
+  opacity: 0.8;
+}
+
+/* Light theme adjustments for placeholder */
+:root.light .card-image img.placeholder-image,
+[data-theme="light"] .card-image img.placeholder-image {
+  background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-tertiary) 100%);
+  opacity: 0.9;
+}
+
 .submission-card:hover .card-image img {
   transform: scale(1.08);
   filter: brightness(1) saturate(1.2);
+}
+
+.submission-card:hover .card-image img.placeholder-image {
+  transform: scale(1.02);
+  filter: brightness(1.05);
+  opacity: 1;
 }
 
 .card-content {

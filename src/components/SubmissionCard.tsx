@@ -1,6 +1,7 @@
 import React from 'react';
 import type { ForemArticle } from '../types';
 import './SubmissionCard.css';
+import placeholderCover from '../assets/placeholder-cover.svg';
 
 interface SubmissionCardProps {
   article: ForemArticle;
@@ -21,15 +22,14 @@ export const SubmissionCard: React.FC<SubmissionCardProps> = ({ article }) => {
 
   return (
     <article className="submission-card" onClick={handleCardClick}>
-      {article.cover_image && (
-        <div className="card-image">
-          <img 
-            src={article.cover_image} 
-            alt={article.title}
-            loading="lazy"
-          />
-        </div>
-      )}
+      <div className="card-image">
+        <img 
+          src={article.cover_image || placeholderCover}
+          alt={article.cover_image ? article.title : 'No cover image'}
+          loading="lazy"
+          className={!article.cover_image ? 'placeholder-image' : ''}
+        />
+      </div>
       
       <div className="card-content">
         <h3 className="card-title">{article.title}</h3>
