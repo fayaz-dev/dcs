@@ -1,0 +1,9 @@
+{
+  "mcpServers": {
+    "dev-challenge-submissions": {
+      "command": "tsx",
+      "args": ["mcp/server.ts"],
+      "cwd": "/home/fayaz/lab/devc/dcs"
+    }
+  }
+}

@@ -1,20 +1,22 @@
 # Dev Challenge Submissions
 
-A modern web application for browsing dev challenge submissions from dev.to. This app consists of a CLI tool to fetch submissions and a React web interface to display them.
+A modern web application for browsing dev challenge submissions from dev.to. This app consists of a CLI tool to fetch submissions, a React web interface to display them, and an MCP server for AI assistant integration.
 
 ## Features
 
-- **CLI Tool**: Fetch submissions from dev.to using the Forem API
+- **CLI Tool**: Fetch, update, and manage submissions from dev.to using the Forem API
 - **Beautiful Web Interface**: Browse submissions with sorting and search functionality
+- **MCP Server**: Model Context Protocol server for AI assistant integration (GitHub Copilot, Claude, etc.)
 - **Auto-refresh**: Web app automatically updates when new data is fetched or removed
 - **Responsive Design**: Works great on desktop and mobile devices
-- **Safe Operations**: Automatic backups when removing tags
+- **Safe Operations**: Automatic backups when removing or updating tags
 - **Modern Tech Stack**: Built with React, TypeScript, and Vite
 
 ## Technologies Used
 
 - **Frontend**: React 19, TypeScript, Vite
 - **CLI**: Node.js, TypeScript
+- **MCP Server**: Model Context Protocol, stdio transport
 - **API**: Forem API V1 (dev.to)
 - **Package Manager**: pnpm
 

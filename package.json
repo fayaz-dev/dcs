@@ -11,9 +11,12 @@
     "cli": "tsx cli/index.ts",
     "fetch": "tsx cli/index.ts",
     "update": "tsx cli/index.ts update",
-    "remove": "tsx cli/index.ts remove"
+    "remove": "tsx cli/index.ts remove",
+    "mcp": "tsx mcp/server.ts",
+    "mcp:test": "node mcp/test.js"
   },
   "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.17.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0"
   },
