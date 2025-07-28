@@ -84,6 +84,40 @@ async function ensureBackupDirectory(): Promise<void> {
   }
 }
 
+async function validateTagName(tag: string): Promise<void> {
+  // Don't allow fetching devchallenge tag (too many submissions)
+  if (tag.toLowerCase() === 'devchallenge') {
+    throw new Error('❌ Cannot fetch "devchallenge" tag directly - it contains too many submissions.\n   Use specific challenge tags like "hacktoberfestchallenge", "algoliachallenge", etc.');
+  }
+  
+  // Only allow tags that end with "challenge"
+  if (!tag.toLowerCase().endsWith('challenge')) {
+    throw new Error(`❌ Invalid tag "${tag}" - only challenge tags ending with "challenge" are allowed.\n   Examples: hacktoberfestchallenge, algoliachallenge, reactchallenge`);
+  }
+}
+
+async function filterChallengeSubmissions(articles: ForemArticle[]): Promise<ForemArticle[]> {
+  // Filter out submissions that don't have "devchallenge" in their tag_list
+  const validSubmissions = articles.filter(article => {
+    const hasDevChallengeTag = article.tag_list.some(tag => 
+      tag.toLowerCase() === 'devchallenge'
+    );
+    
+    if (!hasDevChallengeTag) {
+      console.log(`Filtered out: "${article.title}" (no devchallenge tag)`);
+    }
+    
+    return hasDevChallengeTag;
+  });
+  
+  const filteredCount = articles.length - validSubmissions.length;
+  if (filteredCount > 0) {
+    console.log(`📋 Filtered out ${filteredCount} non-challenge submissions`);
+  }
+  
+  return validSubmissions;
+}
+
 async function notifyWebApp(): Promise<void> {
   // Create a timestamp file to trigger web app refresh
   const timestampFile = join(DATA_DIR, '.refresh');
@@ -120,10 +154,47 @@ async function updateTagsIndex(tags: string[]): Promise<void> {
       // File doesn't exist yet, that's okay
     }
     
+    // Add new tags and ensure uniqueness
     const allTags = Array.from(new Set([...existingTags, ...tags])).sort();
     
-    await fs.writeFile(indexPath, JSON.stringify(allTags, null, 2));
-    console.log(`Updated tags index with ${allTags.length} total tags`);
+    // Only write if there are actual changes
+    const hasChanges = allTags.length !== existingTags.length || 
+                       !allTags.every((tag, index) => tag === existingTags[index]);
+    
+    if (hasChanges) {
+      await fs.writeFile(indexPath, JSON.stringify(allTags, null, 2));
+      console.log(`Updated tags index with ${allTags.length} total tags`);
+    } else {
+      console.log(`Tags index already up to date with ${allTags.length} tags`);
+    }
+  } catch (error) {
+    console.error('Error updating tags index:', error);
+    throw error;
+  }
+}
+
+async function ensureTagInIndex(tag: string): Promise<void> {
+  const indexPath = join(DATA_DIR, 'tags.json');
+  
+  try {
+    let existingTags: string[] = [];
+    
+    try {
+      const existingData = await fs.readFile(indexPath, 'utf-8');
+      existingTags = JSON.parse(existingData);
+    } catch {
+      // File doesn't exist yet, that's okay
+    }
+    
+    // Check if tag already exists
+    if (!existingTags.includes(tag)) {
+      existingTags.push(tag);
+      const sortedTags = existingTags.sort();
+      await fs.writeFile(indexPath, JSON.stringify(sortedTags, null, 2));
+      console.log(`Added ${tag} to tags index`);
+    } else {
+      console.log(`Tag ${tag} already exists in index`);
+    }
   } catch (error) {
     console.error('Error updating tags index:', error);
     throw error;
@@ -186,22 +257,36 @@ async function removeTagFiles(tag: string): Promise<void> {
 }
 
 async function fetchSubmissions(tag: string): Promise<void> {
+  // Validate tag name before fetching
+  await validateTagName(tag);
+  
   const client = new ForemAPIClient();
   
   try {
-    const articles = await client.fetchAllArticlesByTag(tag);
+    console.log(`📥 Fetching raw submissions for tag: ${tag}`);
+    const rawArticles = await client.fetchAllArticlesByTag(tag);
+    
+    console.log(`🔍 Filtering challenge submissions (must have "devchallenge" tag)...`);
+    const validArticles = await filterChallengeSubmissions(rawArticles);
+    
+    if (validArticles.length === 0) {
+      console.log(`❌ No valid challenge submissions found for tag: ${tag}`);
+      console.log(`   Make sure the tag contains submissions that also have the "devchallenge" tag.`);
+      return;
+    }
     
     const tagData: TagData = {
       tag,
-      submissions: articles,
+      submissions: validArticles,
       fetchedAt: new Date().toISOString()
     };
     
     await saveTagData(tagData);
-    await updateTagsIndex([tag]);
+    await ensureTagInIndex(tag);
     await notifyWebApp();
     
-    console.log(`✅ Successfully fetched and saved ${articles.length} submissions for tag: ${tag}`);
+    console.log(`✅ Successfully fetched and saved ${validArticles.length} valid challenge submissions for tag: ${tag}`);
+    console.log(`   (Filtered from ${rawArticles.length} total submissions)`);
   } catch (error) {
     console.error(`❌ Failed to fetch submissions for tag: ${tag}`, error);
     process.exit(1);
@@ -295,16 +380,22 @@ async function removeTag(): Promise<void> {
 function printUsage(): void {
   console.log(`
 Usage: 
-  npm run fetch <tag>     - Fetch submissions for a tag
+  npm run fetch <tag>     - Fetch submissions for a challenge tag
   npm run remove          - Remove a tag (interactive)
 
 Examples:
-  npm run fetch devchallenge
-  npm run fetch react
+  npm run fetch hacktoberfestchallenge
+  npm run fetch algoliachallenge
+  npm run fetch reactchallenge
   npm run remove
 
-Fetch will download all submissions with the specified tag from dev.to
-and save them directly to ./public/data/<tag>.json for immediate web app use.
+Requirements for fetch:
+  - Tag must end with "challenge" (e.g., "hacktoberfestchallenge")
+  - Cannot fetch "devchallenge" directly (use specific challenge tags instead)
+  - Only submissions with "devchallenge" tag will be included
+
+Fetch will download challenge submissions with the specified tag from dev.to,
+filter for valid contest entries, and save them directly to ./public/data/<tag>.json.
 
 Remove will interactively let you select and remove a tag, creating
 a backup in ./backup/ before removing from ./public/data/

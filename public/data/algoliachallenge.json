@@ -89,49 +89,6 @@
     },
     {
       "type_of": "article",
-      "id": 2726578,
-      "title": "Stock Search and Insights Using Algolia and n8n",
-      "description": "This is a submission for the Algolia MCP Server Challenge           Stock Search &amp; Insights...",
-      "readable_publish_date": "Jul 28",
-      "slug": "stock-search-and-insights-using-algolia-and-n8n-569m",
-      "path": "/apoorv_dev07/stock-search-and-insights-using-algolia-and-n8n-569m",
-      "url": "https://dev.to/apoorv_dev07/stock-search-and-insights-using-algolia-and-n8n-569m",
-      "comments_count": 0,
-      "public_reactions_count": 0,
-      "collection_id": null,
-      "published_timestamp": "2025-07-28T01:08:01Z",
-      "language": "en",
-      "subforem_id": 1,
-      "positive_reactions_count": 0,
-      "cover_image": null,
-      "social_image": "https://media2.dev.to/dynamic/image/width=1000,height=500,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Farticles%2F1n46xcyess140uzotjd9.png",
-      "canonical_url": "https://dev.to/apoorv_dev07/stock-search-and-insights-using-algolia-and-n8n-569m",
-      "created_at": "2025-07-27T19:58:19Z",
-      "edited_at": null,
-      "crossposted_at": null,
-      "published_at": "2025-07-28T01:08:01Z",
-      "last_comment_at": "2025-07-28T01:08:01Z",
-      "reading_time_minutes": 2,
-      "tag_list": [
-        "algoliachallenge",
-        "ai",
-        "bunjs",
-        "n8n"
-      ],
-      "tags": "algoliachallenge, ai, bunjs, n8n",
-      "user": {
-        "name": "Apoorv Gupta",
-        "username": "apoorv_dev07",
-        "twitter_username": null,
-        "github_username": null,
-        "user_id": 3303920,
-        "website_url": null,
-        "profile_image": "https://media2.dev.to/dynamic/image/width=640,height=640,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Fuser%2Fprofile_image%2F3303920%2F2a752db2-cb02-44d2-9b5a-be53864e16e7.png",
-        "profile_image_90": "https://media2.dev.to/dynamic/image/width=90,height=90,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Fuser%2Fprofile_image%2F3303920%2F2a752db2-cb02-44d2-9b5a-be53864e16e7.png"
-      }
-    },
-    {
-      "type_of": "article",
       "id": 2726894,
       "title": "Synapse",
       "description": "This is a submission for the Algolia MCP Server Challenge           What I Built            Demo   TO...",
@@ -1292,53 +1249,6 @@
     },
     {
       "type_of": "article",
-      "id": 2684795,
-      "title": "Join The algoli",
-      "description": "A post by Laila Silva",
-      "readable_publish_date": "Jul 13",
-      "slug": "join-the-algoli-11nk",
-      "path": "/laila_silva_9aaf47b8baadf/join-the-algoli-11nk",
-      "url": "https://dev.to/laila_silva_9aaf47b8baadf/join-the-algoli-11nk",
-      "comments_count": 0,
-      "public_reactions_count": 0,
-      "collection_id": null,
-      "published_timestamp": "2025-07-13T22:59:40Z",
-      "language": null,
-      "subforem_id": 1,
-      "positive_reactions_count": 0,
-      "cover_image": null,
-      "social_image": "https://media2.dev.to/dynamic/image/width=1000,height=500,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Farticles%2F7dqixh0s1f2kl7fgo0ub.png",
-      "canonical_url": "https://dev.to/laila_silva_9aaf47b8baadf/join-the-algoli-11nk",
-      "created_at": "2025-07-13T22:59:40Z",
-      "edited_at": null,
-      "crossposted_at": null,
-      "published_at": "2025-07-13T22:59:40Z",
-      "last_comment_at": "2025-07-13T22:59:40Z",
-      "reading_time_minutes": 0,
-      "tag_list": [
-        "algoliachallenge",
-        "announcement",
-        "discuss"
-      ],
-      "tags": "algoliachallenge, announcement, discuss",
-      "user": {
-        "name": "Laila Silva",
-        "username": "laila_silva_9aaf47b8baadf",
-        "twitter_username": null,
-        "github_username": null,
-        "user_id": 3351839,
-        "website_url": null,
-        "profile_image": "https://media2.dev.to/dynamic/image/width=640,height=640,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Fuser%2Fprofile_image%2F3351839%2F1336a7cf-03f5-4f2f-b919-ce4aaaac1639.png",
-        "profile_image_90": "https://media2.dev.to/dynamic/image/width=90,height=90,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Fuser%2Fprofile_image%2F3351839%2F1336a7cf-03f5-4f2f-b919-ce4aaaac1639.png"
-      },
-      "flare_tag": {
-        "name": "discuss",
-        "bg_color_hex": "#71EA8B",
-        "text_color_hex": "#FFFFFF"
-      }
-    },
-    {
-      "type_of": "article",
       "id": 2681746,
       "title": "Self-Documenting MCP: One-Step Algolia Setup via MCP Server in Cursor IDE",
       "description": "This is a submission for the Algolia MCP Server Challenge           What I Built   A Cursor-powered...",
@@ -1378,46 +1288,6 @@
         "website_url": "https://www.axrisi.com/",
         "profile_image": "https://media2.dev.to/dynamic/image/width=640,height=640,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Fuser%2Fprofile_image%2F3226798%2F0c0a8594-658c-4146-a639-8068ede85f67.jpg",
         "profile_image_90": "https://media2.dev.to/dynamic/image/width=90,height=90,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Fuser%2Fprofile_image%2F3226798%2F0c0a8594-658c-4146-a639-8068ede85f67.jpg"
-      }
-    },
-    {
-      "type_of": "article",
-      "id": 2703891,
-      "title": "Spotify Lyrics with Algolia MCP",
-      "description": "🎧 Motivation Behind the Project   Modern music streaming services have evolved tremendously...",
-      "readable_publish_date": "Jul 18",
-      "slug": "spotify-lyrics-with-algolia-mcp-3mji",
-      "path": "/daniela_oliveira/spotify-lyrics-with-algolia-mcp-3mji",
-      "url": "https://dev.to/daniela_oliveira/spotify-lyrics-with-algolia-mcp-3mji",
-      "comments_count": 3,
-      "public_reactions_count": 5,
-      "collection_id": null,
-      "published_timestamp": "2025-07-18T16:03:16Z",
-      "language": "en",
-      "subforem_id": 1,
-      "positive_reactions_count": 5,
-      "cover_image": null,
-      "social_image": "https://media2.dev.to/dynamic/image/width=1000,height=500,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Farticles%2Fcoey63weeoyh5289if6v.png",
-      "canonical_url": "https://dev.to/daniela_oliveira/spotify-lyrics-with-algolia-mcp-3mji",
-      "created_at": "2025-07-18T16:03:16Z",
-      "edited_at": null,
-      "crossposted_at": null,
-      "published_at": "2025-07-18T16:03:16Z",
-      "last_comment_at": "2025-07-23T04:19:29Z",
-      "reading_time_minutes": 3,
-      "tag_list": [
-        "algoliachallenge"
-      ],
-      "tags": "algoliachallenge",
-      "user": {
-        "name": "Daniela Oliveira",
-        "username": "daniela_oliveira",
-        "twitter_username": null,
-        "github_username": null,
-        "user_id": 3349180,
-        "website_url": null,
-        "profile_image": "https://media2.dev.to/dynamic/image/width=640,height=640,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Fuser%2Fprofile_image%2F3349180%2F797dd983-46e0-43e0-b020-e730eecd1bb4.png",
-        "profile_image_90": "https://media2.dev.to/dynamic/image/width=90,height=90,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Fuser%2Fprofile_image%2F3349180%2F797dd983-46e0-43e0-b020-e730eecd1bb4.png"
       }
     },
     {
@@ -1770,50 +1640,7 @@
         "profile_image": "https://media2.dev.to/dynamic/image/width=640,height=640,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Forganization%2Fprofile_image%2F1%2Fd908a186-5651-4a5a-9f76-15200bc6801f.jpg",
         "profile_image_90": "https://media2.dev.to/dynamic/image/width=90,height=90,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Forganization%2Fprofile_image%2F1%2Fd908a186-5651-4a5a-9f76-15200bc6801f.jpg"
       }
-    },
-    {
-      "type_of": "article",
-      "id": 1373832,
-      "title": "Top 5 Freelance Services! Best Freelance Websites to Find Work",
-      "description": "1. Upwork  Commission - 10% - 20% (depends on the amount of the contract, the larger the amount, the...",
-      "readable_publish_date": "Feb 21 '23",
-      "slug": "top-5-freelance-services-best-freelance-websites-to-find-work-53lb",
-      "path": "/codenear/top-5-freelance-services-best-freelance-websites-to-find-work-53lb",
-      "url": "https://dev.to/codenear/top-5-freelance-services-best-freelance-websites-to-find-work-53lb",
-      "comments_count": 0,
-      "public_reactions_count": 2,
-      "collection_id": null,
-      "published_timestamp": "2023-02-21T11:19:05Z",
-      "language": "en",
-      "subforem_id": null,
-      "positive_reactions_count": 2,
-      "cover_image": "https://media2.dev.to/dynamic/image/width=1000,height=420,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Farticles%2F310zscn1q5udgusbh4c0.jpg",
-      "social_image": "https://media2.dev.to/dynamic/image/width=1000,height=500,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Farticles%2F310zscn1q5udgusbh4c0.jpg",
-      "canonical_url": "https://dev.to/codenear/top-5-freelance-services-best-freelance-websites-to-find-work-53lb",
-      "created_at": "2023-02-21T11:19:06Z",
-      "edited_at": null,
-      "crossposted_at": null,
-      "published_at": "2023-02-21T11:19:05Z",
-      "last_comment_at": "2023-02-21T11:19:05Z",
-      "reading_time_minutes": 4,
-      "tag_list": [
-        "algoliachallenge",
-        "ai",
-        "robotics",
-        "softwaredevelopment"
-      ],
-      "tags": "algoliachallenge, ai, robotics, softwaredevelopment",
-      "user": {
-        "name": "Codenear",
-        "username": "codenear",
-        "twitter_username": null,
-        "github_username": "Code-Near",
-        "user_id": 820446,
-        "website_url": "https://pricework.org/",
-        "profile_image": "https://media2.dev.to/dynamic/image/width=640,height=640,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Fuser%2Fprofile_image%2F820446%2F4bda356f-941c-4219-884d-a6af647acfbf.png",
-        "profile_image_90": "https://media2.dev.to/dynamic/image/width=90,height=90,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Fuser%2Fprofile_image%2F820446%2F4bda356f-941c-4219-884d-a6af647acfbf.png"
-      }
     }
   ],
-  "fetchedAt": "2025-07-28T01:38:53.431Z"
+  "fetchedAt": "2025-07-28T02:54:42.897Z"
 }
