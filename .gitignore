@@ -1,3 +1,10 @@
+# data
+data/*
+public/*
+
+# AI
+prompts/*
+
 # Logs
 logs
 *.log
