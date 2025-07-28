@@ -2,13 +2,22 @@
 	"servers": {
 		"algolia": {
 			"command": "${input:algolia_mcp_dir}/algolia-mcp"
-		}
+		},
+		"dcs": {
+      		"command": "${input:dcs_mcp_dir}/server"
+    	}
 	},
 	"inputs": [
 		{
 			"id": "algolia_mcp_dir",
 			"type": "promptString",
 			"description": "Path to the Algolia MCP directory",
+			"password": false
+		},
+		{
+			"id": "dcs_mcp_dir",
+			"type": "promptString",
+			"description": "Path to the dev.to Challenges MCP directory",
 			"password": false
 		}
 	]
