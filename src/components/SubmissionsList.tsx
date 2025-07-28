@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import type { TagData } from '../types';
 import { SubmissionCard } from './SubmissionCard';
+import { AnnouncementsList } from './AnnouncementsList';
 import './SubmissionsList.css';
 
 interface SubmissionsListProps {
@@ -45,6 +46,14 @@ export const SubmissionsList: React.FC<SubmissionsListProps> = ({ tagData }) => 
 
   return (
     <div className="submissions-list">
+      {/* Show announcements first if they exist */}
+      {tagData.announcements && tagData.announcements.length > 0 && (
+        <AnnouncementsList 
+          announcements={tagData.announcements} 
+          tagName={tagData.tag} 
+        />
+      )}
+      
       <div className="list-header">
         <div className="submissions-count">
           <span className="count">{sortedSubmissions.length}</span>

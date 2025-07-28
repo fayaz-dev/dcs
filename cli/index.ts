@@ -96,26 +96,39 @@ async function validateTagName(tag: string): Promise<void> {
   }
 }
 
-async function filterChallengeSubmissions(articles: ForemArticle[]): Promise<ForemArticle[]> {
-  // Filter out submissions that don't have "devchallenge" in their tag_list
-  const validSubmissions = articles.filter(article => {
+async function filterChallengeSubmissions(articles: ForemArticle[]): Promise<{ submissions: ForemArticle[], announcements: ForemArticle[] }> {
+  const submissions: ForemArticle[] = [];
+  const announcements: ForemArticle[] = [];
+  
+  articles.forEach(article => {
     const hasDevChallengeTag = article.tag_list.some(tag => 
       tag.toLowerCase() === 'devchallenge'
     );
     
-    if (!hasDevChallengeTag) {
+    if (hasDevChallengeTag) {
+      // Check if it's from dev team
+      const isDevTeamAnnouncement = article.organization?.username === 'devteam';
+      
+      if (isDevTeamAnnouncement) {
+        announcements.push(article);
+        console.log(`Found announcement: "${article.title}" by ${article.organization?.name}`);
+      } else {
+        submissions.push(article);
+      }
+    } else {
       console.log(`Filtered out: "${article.title}" (no devchallenge tag)`);
     }
-    
-    return hasDevChallengeTag;
   });
   
-  const filteredCount = articles.length - validSubmissions.length;
+  const filteredCount = articles.length - submissions.length - announcements.length;
   if (filteredCount > 0) {
     console.log(`📋 Filtered out ${filteredCount} non-challenge submissions`);
   }
+  if (announcements.length > 0) {
+    console.log(`📢 Found ${announcements.length} dev team announcements`);
+  }
   
-  return validSubmissions;
+  return { submissions, announcements };
 }
 
 async function notifyWebApp(): Promise<void> {
@@ -132,11 +145,39 @@ async function saveTagData(tagData: TagData): Promise<void> {
   const filename = `${tagData.tag}.json`;
   const filepath = join(DATA_DIR, filename);
   
+  // Create a clean version with only submissions (no announcements)
+  const cleanTagData = {
+    tag: tagData.tag,
+    submissions: tagData.submissions,
+    fetchedAt: tagData.fetchedAt
+  };
+  
   try {
-    await fs.writeFile(filepath, JSON.stringify(tagData, null, 2));
+    await fs.writeFile(filepath, JSON.stringify(cleanTagData, null, 2));
     console.log(`Saved ${tagData.submissions.length} submissions to ${filepath}`);
   } catch (error) {
     console.error(`Error saving data for tag ${tagData.tag}:`, error);
+    throw error;
+  }
+}
+
+async function saveAnnouncementsData(tag: string, announcements: ForemArticle[]): Promise<void> {
+  if (announcements.length === 0) return;
+  
+  const filename = `${tag}-announcements.json`;
+  const filepath = join(DATA_DIR, filename);
+  
+  const announcementsData = {
+    tag,
+    announcements,
+    fetchedAt: new Date().toISOString()
+  };
+  
+  try {
+    await fs.writeFile(filepath, JSON.stringify(announcementsData, null, 2));
+    console.log(`Saved ${announcements.length} announcements to ${filepath}`);
+  } catch (error) {
+    console.error(`Error saving announcements for tag ${tag}:`, error);
     throw error;
   }
 }
@@ -242,18 +283,20 @@ async function backupTagData(tag: string): Promise<void> {
 
 async function removeTagFiles(tag: string): Promise<void> {
   const dataFile = join(DATA_DIR, `${tag}.json`);
+  const announcementsFile = join(DATA_DIR, `${tag}-announcements.json`);
   
   const removeFile = async (filePath: string, location: string) => {
     try {
       await fs.access(filePath);
       await fs.unlink(filePath);
-      console.log(`🗑️  Removed ${tag}.json from ${location}`);
+      console.log(`🗑️  Removed ${filePath.split('/').pop()} from ${location}`);
     } catch {
-      console.log(`ℹ️  No ${tag}.json found in ${location}`);
+      console.log(`ℹ️  No ${filePath.split('/').pop()} found in ${location}`);
     }
   };
   
   await removeFile(dataFile, 'public/data directory');
+  await removeFile(announcementsFile, 'public/data directory');
 }
 
 async function fetchSubmissions(tag: string): Promise<void> {
@@ -267,9 +310,9 @@ async function fetchSubmissions(tag: string): Promise<void> {
     const rawArticles = await client.fetchAllArticlesByTag(tag);
     
     console.log(`🔍 Filtering challenge submissions (must have "devchallenge" tag)...`);
-    const validArticles = await filterChallengeSubmissions(rawArticles);
+    const { submissions, announcements } = await filterChallengeSubmissions(rawArticles);
     
-    if (validArticles.length === 0) {
+    if (submissions.length === 0 && announcements.length === 0) {
       console.log(`❌ No valid challenge submissions found for tag: ${tag}`);
       console.log(`   Make sure the tag contains submissions that also have the "devchallenge" tag.`);
       return;
@@ -277,15 +320,20 @@ async function fetchSubmissions(tag: string): Promise<void> {
     
     const tagData: TagData = {
       tag,
-      submissions: validArticles,
+      submissions,
+      announcements: announcements.length > 0 ? announcements : undefined,
       fetchedAt: new Date().toISOString()
     };
     
     await saveTagData(tagData);
+    await saveAnnouncementsData(tag, announcements);
     await ensureTagInIndex(tag);
     await notifyWebApp();
     
-    console.log(`✅ Successfully fetched and saved ${validArticles.length} valid challenge submissions for tag: ${tag}`);
+    console.log(`✅ Successfully fetched and saved ${submissions.length} valid challenge submissions for tag: ${tag}`);
+    if (announcements.length > 0) {
+      console.log(`📢 Also saved ${announcements.length} dev team announcements separately`);
+    }
     console.log(`   (Filtered from ${rawArticles.length} total submissions)`);
   } catch (error) {
     console.error(`❌ Failed to fetch submissions for tag: ${tag}`, error);
@@ -476,17 +524,20 @@ Requirements for fetch/update:
   - Tag must end with "challenge" (e.g., "hacktoberfestchallenge")
   - Cannot fetch "devchallenge" directly (use specific challenge tags instead)
   - Only submissions with "devchallenge" tag will be included
+  - Dev team announcements are automatically separated into <tag>-announcements.json
 
 Fetch will download challenge submissions with the specified tag from dev.to,
-filter for valid contest entries, and save them directly to ./public/data/<tag>.json.
+filter for valid contest entries, and save them to ./public/data/<tag>.json.
+Any announcements from the DEV Team will be saved separately to ./public/data/<tag>-announcements.json.
 
 Update will re-fetch existing tags to get the latest submissions, creating
 backups before updating the data.
 
 Remove will interactively let you select and remove a tag, creating
-a backup in ./backup/ before removing from ./public/data/
+backups in ./backup/ before removing from ./public/data/
 
 The web app will automatically reflect changes when you fetch, update, or remove tags.
+Announcements will be displayed prominently at the top of each challenge page.
 `);
 }
 

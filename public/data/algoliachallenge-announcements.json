@@ -1,0 +1,56 @@
+{
+  "tag": "algoliachallenge",
+  "announcements": [
+    {
+      "type_of": "article",
+      "id": 2669233,
+      "title": "Join the Algolia MCP Server Challenge: $3,000 in Prizes!",
+      "description": "We are thrilled to partner with Algolia, one of our amazing Diamond Sponsors, for an exciting new DEV...",
+      "readable_publish_date": "Jul 10",
+      "slug": "join-the-algolia-mcp-server-challenge-3000-in-prizes-1non",
+      "path": "/devteam/join-the-algolia-mcp-server-challenge-3000-in-prizes-1non",
+      "url": "https://dev.to/devteam/join-the-algolia-mcp-server-challenge-3000-in-prizes-1non",
+      "comments_count": 38,
+      "public_reactions_count": 192,
+      "collection_id": null,
+      "published_timestamp": "2025-07-10T16:07:25Z",
+      "language": "en",
+      "subforem_id": 1,
+      "positive_reactions_count": 192,
+      "cover_image": "https://media2.dev.to/dynamic/image/width=1000,height=420,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Farticles%2F3b7inoy07a7212m0zz1r.png",
+      "social_image": "https://media2.dev.to/dynamic/image/width=1000,height=500,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Farticles%2F3b7inoy07a7212m0zz1r.png",
+      "canonical_url": "https://dev.to/devteam/join-the-algolia-mcp-server-challenge-3000-in-prizes-1non",
+      "created_at": "2025-07-08T18:17:26Z",
+      "edited_at": null,
+      "crossposted_at": null,
+      "published_at": "2025-07-10T16:07:25Z",
+      "last_comment_at": "2025-07-26T20:11:14Z",
+      "reading_time_minutes": 3,
+      "tag_list": [
+        "devchallenge",
+        "algoliachallenge",
+        "ai",
+        "webdev"
+      ],
+      "tags": "devchallenge, algoliachallenge, ai, webdev",
+      "user": {
+        "name": "Jess Lee",
+        "username": "jess",
+        "twitter_username": "jessleenyc",
+        "github_username": "jessleenyc",
+        "user_id": 264,
+        "website_url": null,
+        "profile_image": "https://media2.dev.to/dynamic/image/width=640,height=640,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Fuser%2Fprofile_image%2F264%2Fb75f6edf-df7b-406e-a56b-43facafb352c.jpg",
+        "profile_image_90": "https://media2.dev.to/dynamic/image/width=90,height=90,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Fuser%2Fprofile_image%2F264%2Fb75f6edf-df7b-406e-a56b-43facafb352c.jpg"
+      },
+      "organization": {
+        "name": "The DEV Team",
+        "username": "devteam",
+        "slug": "devteam",
+        "profile_image": "https://media2.dev.to/dynamic/image/width=640,height=640,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Forganization%2Fprofile_image%2F1%2Fd908a186-5651-4a5a-9f76-15200bc6801f.jpg",
+        "profile_image_90": "https://media2.dev.to/dynamic/image/width=90,height=90,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Forganization%2Fprofile_image%2F1%2Fd908a186-5651-4a5a-9f76-15200bc6801f.jpg"
+      }
+    }
+  ],
+  "fetchedAt": "2025-07-28T11:24:37.060Z"
+}

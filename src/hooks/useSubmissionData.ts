@@ -78,6 +78,18 @@ export function useSubmissionData() {
       }
       
       const data: TagData = await response.json();
+      
+      // Try to load announcements separately if they exist
+      try {
+        const announcementsResponse = await fetch(`/data/${tag}-announcements.json`);
+        if (announcementsResponse.ok) {
+          const announcementsData = await announcementsResponse.json();
+          data.announcements = announcementsData.announcements;
+        }
+      } catch {
+        // No announcements file, that's okay
+      }
+      
       setTagData(prev => new Map(prev).set(tag, data));
       setState(prev => ({ 
         ...prev, 

@@ -91,22 +91,66 @@ async function validateTagName(tag: string): Promise<void> {
   }
 }
 
-async function filterChallengeSubmissions(articles: ForemArticle[]): Promise<ForemArticle[]> {
-  return articles.filter(article => {
-    return article.tag_list.some(tag => 
+async function filterChallengeSubmissions(articles: ForemArticle[]): Promise<{ submissions: ForemArticle[], announcements: ForemArticle[] }> {
+  const submissions: ForemArticle[] = [];
+  const announcements: ForemArticle[] = [];
+  
+  for (const article of articles) {
+    // Check if it has devchallenge tag
+    const hasDevChallengeTag = article.tag_list.some(tag => 
       tag.toLowerCase() === 'devchallenge'
     );
-  });
+    
+    if (hasDevChallengeTag) {
+      // Check if it's from dev team
+      const isDevTeamAnnouncement = article.organization?.username === 'devteam';
+      
+      if (isDevTeamAnnouncement) {
+        announcements.push(article);
+      } else {
+        submissions.push(article);
+      }
+    }
+  }
+  
+  return { submissions, announcements };
 }
 
 async function saveTagData(tagData: TagData): Promise<void> {
   const filename = `${tagData.tag}.json`;
   const filepath = join(DATA_DIR, filename);
   
+  // Create a clean version with only submissions (no announcements)
+  const cleanTagData = {
+    tag: tagData.tag,
+    submissions: tagData.submissions,
+    fetchedAt: tagData.fetchedAt
+  };
+  
   try {
-    await fs.writeFile(filepath, JSON.stringify(tagData, null, 2));
+    await fs.writeFile(filepath, JSON.stringify(cleanTagData, null, 2));
   } catch (error) {
     console.error(`Error saving data for tag ${tagData.tag}:`, error);
+    throw error;
+  }
+}
+
+async function saveAnnouncementsData(tag: string, announcements: ForemArticle[]): Promise<void> {
+  if (announcements.length === 0) return;
+  
+  const filename = `${tag}-announcements.json`;
+  const filepath = join(DATA_DIR, filename);
+  
+  const announcementsData = {
+    tag,
+    announcements,
+    fetchedAt: new Date().toISOString()
+  };
+  
+  try {
+    await fs.writeFile(filepath, JSON.stringify(announcementsData, null, 2));
+  } catch (error) {
+    console.error(`Error saving announcements for tag ${tag}:`, error);
     throw error;
   }
 }
@@ -148,10 +192,22 @@ async function getExistingTags(): Promise<string[]> {
 
 async function getTagData(tag: string): Promise<TagData | null> {
   const filepath = join(DATA_DIR, `${tag}.json`);
+  const announcementsPath = join(DATA_DIR, `${tag}-announcements.json`);
   
   try {
     const data = await fs.readFile(filepath, 'utf-8');
-    return JSON.parse(data);
+    const tagData: TagData = JSON.parse(data);
+    
+    // Try to load announcements separately
+    try {
+      const announcementsData = await fs.readFile(announcementsPath, 'utf-8');
+      const announcements = JSON.parse(announcementsData);
+      tagData.announcements = announcements.announcements;
+    } catch {
+      // No announcements file, that's okay
+    }
+    
+    return tagData;
   } catch {
     return null;
   }
@@ -190,19 +246,21 @@ async function fetchSubmissions(tag: string): Promise<TagData> {
   const client = new ForemAPIClient();
   
   const rawArticles = await client.fetchAllArticlesByTag(tag);
-  const validArticles = await filterChallengeSubmissions(rawArticles);
+  const { submissions, announcements } = await filterChallengeSubmissions(rawArticles);
   
-  if (validArticles.length === 0) {
+  if (submissions.length === 0 && announcements.length === 0) {
     throw new Error(`No valid challenge submissions found for tag: ${tag}. Make sure the tag contains submissions that also have the "devchallenge" tag.`);
   }
   
   const tagData: TagData = {
     tag,
-    submissions: validArticles,
+    submissions,
+    announcements: announcements.length > 0 ? announcements : undefined,
     fetchedAt: new Date().toISOString()
   };
   
   await saveTagData(tagData);
+  await saveAnnouncementsData(tag, announcements);
   await ensureTagInIndex(tag);
   
   return tagData;

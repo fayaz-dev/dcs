@@ -47,6 +47,7 @@ export interface ForemArticle {
 export interface TagData {
   tag: string;
   submissions: ForemArticle[];
+  announcements?: ForemArticle[];
   fetchedAt: string;
 }
 
