@@ -192,14 +192,21 @@
 }
 
 /* Fallback for better browser compatibility */
-.sort-select option {
+:root.dark .sort-select option,
+[data-theme="dark"] .sort-select option {
   background-color: #111113;
   color: #ffffff;
 }
 
+:root.light .sort-select option,
+[data-theme="light"] .sort-select option {
+  background-color: #fafafa;
+  color: #09090b;
+}
+
 /* Dark mode specific option styling */
 @media (prefers-color-scheme: dark) {
-  .sort-select option {
+  :root:not(.light):not([data-theme="light"]) .sort-select option {
     background-color: #111113;
     color: #ffffff;
   }
@@ -207,7 +214,7 @@
 
 /* Light mode specific option styling */
 @media (prefers-color-scheme: light) {
-  .sort-select option {
+  :root:not(.dark):not([data-theme="dark"]) .sort-select option {
     background-color: #fafafa;
     color: #09090b;
   }

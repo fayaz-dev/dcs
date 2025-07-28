@@ -3,6 +3,7 @@ import { TagSelector } from './components/TagSelector';
 import { SubmissionsList } from './components/SubmissionsList';
 import { LoadingSpinner } from './components/LoadingSpinner';
 import { ErrorDisplay } from './components/ErrorDisplay';
+import { ThemeToggle } from './components/ThemeToggle';
 import './App.css';
 
 function App() {
@@ -18,6 +19,8 @@ function App() {
 
   return (
     <div className="app">
+      <ThemeToggle />
+      
       <header className="app-header">
         <h1 className="app-title">Dev Challenge Submissions</h1>
         <p className="app-description">
