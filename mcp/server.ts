@@ -16,14 +16,6 @@ const FOREM_API_BASE = 'https://dev.to/api';
 const DATA_DIR = join(process.cwd(), 'public', 'data');
 const BACKUP_DIR = join(process.cwd(), 'backup');
 
-interface FetchSubmissionsOptions {
-  tag: string;
-}
-
-interface UpdateSubmissionsOptions {
-  tag?: string;
-}
-
 class ForemAPIClient {
   private baseURL: string;
 
@@ -360,10 +352,11 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
       }
 
       case "get_tag_submissions": {
-        const { tag } = request.params.arguments as { tag: string };
+        const args = request.params.arguments as Record<string, unknown>;
+        const tag = args.tag;
         
-        if (!tag) {
-          throw new McpError(ErrorCode.InvalidParams, "Tag parameter is required");
+        if (!tag || typeof tag !== 'string') {
+          throw new McpError(ErrorCode.InvalidParams, "Tag parameter is required and must be a string");
         }
         
         const tagData = await getTagData(tag);
@@ -418,10 +411,11 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
       }
 
       case "fetch_submissions": {
-        const { tag } = request.params.arguments as FetchSubmissionsOptions;
+        const args = request.params.arguments as Record<string, unknown>;
+        const tag = args.tag;
         
-        if (!tag) {
-          throw new McpError(ErrorCode.InvalidParams, "Tag parameter is required");
+        if (!tag || typeof tag !== 'string') {
+          throw new McpError(ErrorCode.InvalidParams, "Tag parameter is required and must be a string");
         }
         
         const tagData = await fetchSubmissions(tag);
@@ -444,11 +438,16 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
       }
 
       case "update_submissions": {
-        const { tag } = request.params.arguments as UpdateSubmissionsOptions;
+        const args = request.params.arguments as Record<string, unknown>;
+        const tag = args.tag;
+        
+        if (tag && typeof tag !== 'string') {
+          throw new McpError(ErrorCode.InvalidParams, "Tag parameter must be a string if provided");
+        }
         
         if (tag) {
-          // Update specific tag
-          const tagData = await updateTag(tag);
+          // Update specific tag - we know tag is string because of the check above
+          const tagData = await updateTag(tag as string);
           
           return {
             content: [

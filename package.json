@@ -13,6 +13,8 @@
     "update": "tsx cli/index.ts update",
     "remove": "tsx cli/index.ts remove",
     "mcp": "tsx mcp/server.ts",
+    "mcp:build": "npx tsc mcp/server.ts --outDir mcp --target es2022 --module esnext --moduleResolution bundler --allowSyntheticDefaultImports && mv mcp/mcp/server.js mcp/server.js && rm -rf mcp/mcp mcp/src",
+    "mcp:node": "node mcp/server.js",
     "mcp:test": "node mcp/test.js"
   },
   "dependencies": {

@@ -48,21 +48,51 @@ The MCP server provides the following tools:
 pnpm install
 ```
 
-2. The MCP server is located at `mcp/server.ts`
+2. The MCP server is available in two formats:
+   - **TypeScript source**: `mcp/server.ts` (requires tsx)
+   - **Compiled JavaScript**: `mcp/server.js` (requires Node.js only)
+
+3. To compile TypeScript to JavaScript:
+```bash
+pnpm run mcp:build
+```
 
 ### Usage
 
 #### Direct Execution
+
+**Using TypeScript (tsx required):**
 ```bash
-# Run the MCP server directly
+# Run the MCP server directly with TypeScript
 tsx mcp/server.ts
+```
+
+**Using JavaScript (Node.js only):**
+```bash
+# Compile first (if not already done)
+pnpm run mcp:build
+
+# Run the compiled JavaScript version
+node mcp/server.js
+```
+
+#### npm Scripts
+```bash
+# Development (TypeScript)
+pnpm run mcp
+
+# Production (JavaScript)
+pnpm run mcp:node
+
+# Build JavaScript version
+pnpm run mcp:build
 ```
 
 #### Configuration for MCP Clients
 
 ##### GitHub Copilot / VS Code
-Add to your VS Code settings or MCP configuration:
 
+**Using TypeScript (development):**
 ```json
 {
   "mcpServers": {
@@ -75,15 +105,43 @@ Add to your VS Code settings or MCP configuration:
 }
 ```
 
+**Using JavaScript (production):**
+```json
+{
+  "mcpServers": {
+    "dev-challenge-submissions": {
+      "command": "node",
+      "args": ["mcp/server.js"],
+      "cwd": "/path/to/your/dcs/project"
+    }
+  }
+}
+```
+
 ##### Claude Desktop
+
 Add to your Claude configuration file (`~/Library/Application Support/Claude/claude_desktop_config.json` on macOS):
 
+**Using TypeScript (development):**
 ```json
 {
   "mcpServers": {
     "dev-challenge-submissions": {
       "command": "tsx",
       "args": ["/path/to/your/dcs/project/mcp/server.ts"],
+      "cwd": "/path/to/your/dcs/project"
+    }
+  }
+}
+```
+
+**Using JavaScript (production):**
+```json
+{
+  "mcpServers": {
+    "dev-challenge-submissions": {
+      "command": "node",
+      "args": ["/path/to/your/dcs/project/mcp/server.js"],
       "cwd": "/path/to/your/dcs/project"
     }
   }
