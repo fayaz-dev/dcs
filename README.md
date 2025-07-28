@@ -30,7 +30,7 @@ Use the CLI to fetch submissions for a specific tag:
 
 ```bash
 # Fetch submissions for a specific tag
-npm run fetch algoliachallenge
+pnpm run fetch algoliachallenge
 ```
 
 This will:
@@ -41,7 +41,7 @@ This will:
 ### 3. Start the Web App
 
 ```bash
-npm run dev
+pnpm run dev
 ```
 
 The web app will be available at `http://localhost:5173`
@@ -52,12 +52,10 @@ The web app will be available at `http://localhost:5173`
 
 ```bash
 # Fetch submissions for a tag
-npm run fetch <tag-name>
+pnpm run fetch <tag-name>
 
 # Examples
-npm run fetch devchallenge
-npm run fetch javascript
-npm run fetch beginners
+pnpm run fetch hacktoberfestchallenge
 ```
 
 ### Web Interface
@@ -111,19 +109,19 @@ Example submission data structure:
 ### Build for Production
 
 ```bash
-npm run build
+pnpm run build
 ```
 
 ### Preview Production Build
 
 ```bash
-npm run preview
+pnpm run preview
 ```
 
 ### Linting
 
 ```bash
-npm run lint
+pnpm run lint
 ```
 
 ## API Rate Limiting
@@ -135,7 +133,7 @@ The CLI includes built-in rate limiting (100ms delay between requests) to be res
 1. Fork the repository
 2. Create a feature branch
 3. Make your changes
-4. Test with `npm run dev`
+4. Test with `pnpm run dev`
 5. Submit a pull request
 
 ## License
