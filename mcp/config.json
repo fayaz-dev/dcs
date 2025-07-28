@@ -1,9 +1,7 @@
 {
   "mcpServers": {
     "dev-challenge-submissions": {
-      "command": "node",
-      "args": ["mcp/server.js"],
-      "cwd": "/home/fayaz/lab/devc/dcs"
+      "command": "/home/fayaz/lab/devc/dcs/mcp/server"
     }
   }
 }

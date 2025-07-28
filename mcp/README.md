@@ -48,14 +48,20 @@ The MCP server provides the following tools:
 pnpm install
 ```
 
-2. The MCP server is available in two formats:
+2. The MCP server is available in three formats:
    - **TypeScript source**: `mcp/server.ts` (requires tsx)
    - **Compiled JavaScript**: `mcp/server.js` (requires Node.js only)
+   - **Direct executable**: `mcp/server` (standalone executable with shebang)
 
-3. To compile TypeScript to JavaScript:
+3. To compile TypeScript to JavaScript and create the executable:
 ```bash
 pnpm run mcp:build
 ```
+
+This command will:
+- Compile TypeScript to JavaScript
+- Make the file executable
+- Create a direct executable at `mcp/server` (without `.js` extension)
 
 ### Usage
 
@@ -74,6 +80,15 @@ pnpm run mcp:build
 
 # Run the compiled JavaScript version
 node mcp/server.js
+```
+
+**Using Direct Executable (recommended for production):**
+```bash
+# Compile first (if not already done)
+pnpm run mcp:build
+
+# Run the direct executable
+./mcp/server
 ```
 
 #### npm Scripts
@@ -110,13 +125,13 @@ pnpm run mcp:build
 {
   "mcpServers": {
     "dev-challenge-submissions": {
-      "command": "node",
-      "args": ["mcp/server.js"],
-      "cwd": "/path/to/your/dcs/project"
+      "command": "/path/to/your/dcs/project/mcp/server"
     }
   }
 }
 ```
+
+> **Note**: The direct executable approach is recommended for production as it's cleaner and doesn't require specifying Node.js explicitly. The executable includes the shebang (`#!/usr/bin/env node`) and proper permissions.
 
 ##### Claude Desktop
 
@@ -140,9 +155,7 @@ Add to your Claude configuration file (`~/Library/Application Support/Claude/cla
 {
   "mcpServers": {
     "dev-challenge-submissions": {
-      "command": "node",
-      "args": ["/path/to/your/dcs/project/mcp/server.js"],
-      "cwd": "/path/to/your/dcs/project"
+      "command": "/path/to/your/dcs/project/mcp/server"
     }
   }
 }
