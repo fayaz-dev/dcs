@@ -183,6 +183,36 @@
   min-width: 140px;
 }
 
+.sort-select option {
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  padding: 0.5rem;
+  font-weight: 500;
+  border: none;
+}
+
+/* Fallback for better browser compatibility */
+.sort-select option {
+  background-color: #111113;
+  color: #ffffff;
+}
+
+/* Dark mode specific option styling */
+@media (prefers-color-scheme: dark) {
+  .sort-select option {
+    background-color: #111113;
+    color: #ffffff;
+  }
+}
+
+/* Light mode specific option styling */
+@media (prefers-color-scheme: light) {
+  .sort-select option {
+    background-color: #fafafa;
+    color: #09090b;
+  }
+}
+
 .sort-select:focus {
   outline: none;
   border-color: transparent;
