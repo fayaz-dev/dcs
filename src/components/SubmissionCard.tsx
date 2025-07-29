@@ -55,6 +55,8 @@ export const SubmissionCard: React.FC<SubmissionCardProps> = ({ article }) => {
             <p className="card-description">{article.description}</p>
           )}
           
+          <div className="description-separator"></div>
+          
           <div className="content-meta">
             <div className="stats-section">
               <div className="article-stats">
