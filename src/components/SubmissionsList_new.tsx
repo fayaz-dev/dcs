@@ -126,8 +126,6 @@ export const SubmissionsList: React.FC<SubmissionsListProps> = ({
     const height = controlsContainer.offsetHeight;
     setControlsHeight(height);
 
-    let timeoutId: NodeJS.Timeout;
-
     const observer = new IntersectionObserver(
       (entries) => {
         const entry = entries[0];
@@ -135,20 +133,16 @@ export const SubmissionsList: React.FC<SubmissionsListProps> = ({
         // but not when it goes out of view at the bottom (user is above controls)
         const shouldBeSticky = !entry.isIntersecting && entry.boundingClientRect.top < 0;
         
-        // Debounce the state change to prevent rapid toggling
-        clearTimeout(timeoutId);
-        timeoutId = setTimeout(() => {
-          // Mark as animated when becoming sticky for the first time
-          if (shouldBeSticky && !hasAnimated) {
-            setHasAnimated(true);
-          }
-          
-          setIsSticky(shouldBeSticky);
-        }, 16); // One frame delay to prevent flickering
+        // Mark as animated when becoming sticky for the first time
+        if (shouldBeSticky && !hasAnimated) {
+          setHasAnimated(true);
+        }
+        
+        setIsSticky(shouldBeSticky);
       },
       {
         threshold: 0,
-        rootMargin: '-10px 0px 0px 0px' // Small buffer to prevent rapid toggling at the exact edge
+        rootMargin: '0px'
       }
     );
 
@@ -164,7 +158,6 @@ export const SubmissionsList: React.FC<SubmissionsListProps> = ({
     window.addEventListener('resize', handleResize, { passive: true });
 
     return () => {
-      clearTimeout(timeoutId);
       observer.disconnect();
       window.removeEventListener('resize', handleResize);
     };
@@ -187,25 +180,25 @@ export const SubmissionsList: React.FC<SubmissionsListProps> = ({
         fetchedAt={tagData.fetchedAt}
       />
       
-      {/* Sentinel element placed BEFORE controls to detect when user scrolls past this point */}
-      <div ref={sentinelRef} className="controls-sentinel" />
-      
-      {/* Single controls container that uses CSS positioning - OUTSIDE of any transform containers */}
-      <div 
-        className={`controls-container ${isSticky ? 'sticky' : ''} ${hasAnimated ? 'animate-in' : ''}`}
-        ref={controlsContainerRef}
-      >
-        <ControlsContent
-          tagName={tagData.tag}
-          searchTerm={searchTerm}
-          sortBy={sortBy}
-          onSearchChange={handleSearchChange}
-          onSortChange={handleSortChange}
-          showInitialAnimation={!initialAnimationComplete}
-        />
-      </div>
-      
       <div className="list-header">
+        {/* Single controls container that uses CSS positioning */}
+        <div 
+          className={`controls-container ${isSticky ? 'sticky' : ''} ${hasAnimated ? 'animate-in' : ''}`}
+          ref={controlsContainerRef}
+        >
+          <ControlsContent
+            tagName={tagData.tag}
+            searchTerm={searchTerm}
+            sortBy={sortBy}
+            onSearchChange={handleSearchChange}
+            onSortChange={handleSortChange}
+            showInitialAnimation={!initialAnimationComplete}
+          />
+          
+          {/* Sentinel element placed at the bottom of controls to detect when user scrolls past */}
+          <div ref={sentinelRef} className="controls-sentinel" />
+        </div>
+        
         {/* Spacer to maintain layout when controls become sticky */}
         {isSticky && <div className="controls-spacer" style={{ height: `${controlsHeight}px` }} />}
       </div>
