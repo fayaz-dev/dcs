@@ -103,7 +103,7 @@ export const SubmissionsList: React.FC<SubmissionsListProps> = ({ tagData }) => 
       ) : (
         <div className="submissions-grid">
           {sortedSubmissions.map((article) => (
-            <SubmissionCard key={article.id} article={article} />
+            <SubmissionCard key={article.id} article={article} currentTag={tagData.tag} />
           ))}
         </div>
       )}

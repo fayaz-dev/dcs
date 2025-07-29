@@ -5,9 +5,10 @@ import placeholderCover from '../assets/placeholder-cover.svg';
 
 interface SubmissionCardProps {
   article: ForemArticle;
+  currentTag: string;
 }
 
-export const SubmissionCard: React.FC<SubmissionCardProps> = ({ article }) => {
+export const SubmissionCard: React.FC<SubmissionCardProps> = ({ article, currentTag }) => {
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('en-US', {
       year: 'numeric',
@@ -76,14 +77,27 @@ export const SubmissionCard: React.FC<SubmissionCardProps> = ({ article }) => {
             </div>
             
             <div className="card-tags">
-              {article.tag_list.slice(0, 4).map((tag) => (
-                <span key={tag} className="tag-chip">
-                  {tag}
-                </span>
-              ))}
-              {article.tag_list.length > 4 && (
+              {article.tag_list
+                .filter((tag) => {
+                  const lowerTag = tag.toLowerCase();
+                  // Filter out devchallenge and the current challenge tag
+                  return lowerTag !== 'devchallenge' && lowerTag !== currentTag.toLowerCase();
+                })
+                .slice(0, 4)
+                .map((tag) => (
+                  <span key={tag} className="tag-chip">
+                    {tag}
+                  </span>
+                ))}
+              {article.tag_list.filter((tag) => {
+                const lowerTag = tag.toLowerCase();
+                return lowerTag !== 'devchallenge' && lowerTag !== currentTag.toLowerCase();
+              }).length > 4 && (
                 <span className="tag-chip tag-more">
-                  +{article.tag_list.length - 4}
+                  +{article.tag_list.filter((tag) => {
+                    const lowerTag = tag.toLowerCase();
+                    return lowerTag !== 'devchallenge' && lowerTag !== currentTag.toLowerCase();
+                  }).length - 4}
                 </span>
               )}
             </div>
