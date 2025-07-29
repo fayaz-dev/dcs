@@ -95,13 +95,6 @@
   gap: 12px;
 }
 
-.author-avatar {
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  border: 2px solid rgba(255, 255, 255, 0.2);
-}
-
 .author-info {
   display: flex;
   flex-direction: column;
