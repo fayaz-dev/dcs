@@ -22,47 +22,100 @@ const ControlsContent = React.memo<{
   onSearchChange: (value: string) => void;
   onSortChange: (value: SortOption) => void;
   showInitialAnimation?: boolean;
-}>(({ tagName, searchTerm, sortBy, onSearchChange, onSortChange, showInitialAnimation = false }) => (
-  <div className={`controls ${showInitialAnimation ? 'initial-animate' : ''}`}>
-    <TagInfo tagName={tagName} />
-    
-    <div className="search-box">
-      <input
-        type="text"
-        placeholder="Search submissions..."
-        value={searchTerm}
-        onChange={(e) => onSearchChange(e.target.value)}
-        className="search-input"
-      />
-    </div>
-    
-    <div className="sort-controls">
-      <span className="sort-label">
-        <span className="sort-icon">⚡</span>
-        Sort by
-      </span>
-      <div className="sort-dropdown-wrapper">
-        <select
-          id="sort-select"
-          value={sortBy}
-          onChange={(e) => onSortChange(e.target.value as SortOption)}
-          className="sort-select"
-        >
-          <option value="latest">🕒 Latest</option>
-          <option value="popular">❤️ Most Popular</option>
-          <option value="comments">💬 Most Comments</option>
-        </select>
-        <div className="sort-dropdown-arrow">
-          <svg width="12" height="8" viewBox="0 0 12 8" fill="none">
-            <path d="M1 1.5L6 6.5L11 1.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-          </svg>
+  isSticky?: boolean;
+}>(({ tagName, searchTerm, sortBy, onSearchChange, onSortChange, showInitialAnimation = false, isSticky = false }) => {
+  const searchInputRef = useRef<HTMLInputElement>(null);
+  
+  // Maintain focus on search input during re-renders when sticky
+  useEffect(() => {
+    if (isSticky && searchInputRef.current) {
+      const activeElement = document.activeElement;
+      
+      // Check if the currently focused element is a search input
+      if (activeElement && activeElement.classList.contains('search-input') && activeElement !== searchInputRef.current) {
+        // Transfer focus to this search input
+        const cursorPosition = (activeElement as HTMLInputElement).selectionStart;
+        searchInputRef.current.focus();
+        if (cursorPosition !== null) {
+          searchInputRef.current.setSelectionRange(cursorPosition, cursorPosition);
+        }
+      }
+    }
+  });
+
+  return (
+    <div className={`controls ${showInitialAnimation ? 'initial-animate' : ''}`}>
+      <TagInfo tagName={tagName} />
+      
+      <div className="search-box">
+        <input
+          ref={searchInputRef}
+          type="text"
+          placeholder="Search submissions..."
+          value={searchTerm}
+          onChange={(e) => onSearchChange(e.target.value)}
+          className="search-input"
+        />
+      </div>
+      
+      <div className="sort-controls">
+        <span className="sort-label">
+          <span className="sort-icon">⚡</span>
+          Sort by
+        </span>
+        <div className="sort-dropdown-wrapper">
+          <select
+            id="sort-select"
+            value={sortBy}
+            onChange={(e) => onSortChange(e.target.value as SortOption)}
+            className="sort-select"
+          >
+            <option value="latest">🕒 Latest</option>
+            <option value="popular">❤️ Most Popular</option>
+            <option value="comments">💬 Most Comments</option>
+          </select>
+          <div className="sort-dropdown-arrow">
+            <svg width="12" height="8" viewBox="0 0 12 8" fill="none">
+              <path d="M1 1.5L6 6.5L11 1.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+          </div>
         </div>
       </div>
     </div>
-  </div>
-));
+  );
+});
 
 ControlsContent.displayName = 'ControlsContent';
+
+// Memoized sticky controls component to prevent re-renders and focus loss
+const StickyControlsPortal = React.memo<{
+  isSticky: boolean;
+  hasAnimated: boolean;
+  tagName: string;
+  searchTerm: string;
+  sortBy: SortOption;
+  onSearchChange: (value: string) => void;
+  onSortChange: (value: SortOption) => void;
+}>(({ isSticky, hasAnimated, tagName, searchTerm, sortBy, onSearchChange, onSortChange }) => {
+  if (!isSticky) return null;
+  
+  return createPortal(
+    <div className={`controls-container sticky ${hasAnimated ? 'animate-in' : ''}`}>
+      <ControlsContent
+        tagName={tagName}
+        searchTerm={searchTerm}
+        sortBy={sortBy}
+        onSearchChange={onSearchChange}
+        onSortChange={onSortChange}
+        showInitialAnimation={false}
+        isSticky={true}
+      />
+    </div>,
+    document.body
+  );
+});
+
+StickyControlsPortal.displayName = 'StickyControlsPortal';
 
 export const SubmissionsList: React.FC<SubmissionsListProps> = ({ 
   tagData, 
@@ -164,31 +217,18 @@ export const SubmissionsList: React.FC<SubmissionsListProps> = ({
     };
   }, [isSticky, hasAnimated]); // Added hasAnimated as dependency
 
-  // Memoized sticky controls component to prevent re-renders
-  const StickyControls = React.memo(() => {
-    if (!isSticky) return null;
-    
-    return createPortal(
-      <div className={`controls-container sticky ${hasAnimated ? 'animate-in' : ''}`}>
-        <ControlsContent
-          tagName={tagData.tag}
-          searchTerm={searchTerm}
-          sortBy={sortBy}
-          onSearchChange={handleSearchChange}
-          onSortChange={handleSortChange}
-          showInitialAnimation={false}
-        />
-      </div>,
-      document.body
-    );
-  });
-
-  StickyControls.displayName = 'StickyControls';
-
   return (
     <div className="submissions-list">
       {/* Render sticky controls via portal when needed */}
-      <StickyControls />
+      <StickyControlsPortal
+        isSticky={isSticky}
+        hasAnimated={hasAnimated}
+        tagName={tagData.tag}
+        searchTerm={searchTerm}
+        sortBy={sortBy}
+        onSearchChange={handleSearchChange}
+        onSortChange={handleSortChange}
+      />
       
       {/* Show announcements first if they exist and toggle is enabled */}
       {showAnnouncements && tagData.announcements && tagData.announcements.length > 0 && (
@@ -222,6 +262,7 @@ export const SubmissionsList: React.FC<SubmissionsListProps> = ({
               onSearchChange={handleSearchChange}
               onSortChange={handleSortChange}
               showInitialAnimation={!initialAnimationComplete}
+              isSticky={false}
             />
           )}
           
