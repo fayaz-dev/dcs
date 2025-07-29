@@ -13,6 +13,7 @@ type SortOption = 'latest' | 'popular' | 'comments';
 export const SubmissionsList: React.FC<SubmissionsListProps> = ({ tagData }) => {
   const [sortBy, setSortBy] = useState<SortOption>('latest');
   const [searchTerm, setSearchTerm] = useState('');
+  const [showAnnouncements, setShowAnnouncements] = useState(true);
 
   const sortedSubmissions = React.useMemo(() => {
     let filtered = tagData.submissions.filter(article =>
@@ -46,8 +47,8 @@ export const SubmissionsList: React.FC<SubmissionsListProps> = ({ tagData }) => 
 
   return (
     <div className="submissions-list">
-      {/* Show announcements first if they exist */}
-      {tagData.announcements && tagData.announcements.length > 0 && (
+      {/* Show announcements first if they exist and toggle is enabled */}
+      {showAnnouncements && tagData.announcements && tagData.announcements.length > 0 && (
         <AnnouncementsList 
           announcements={tagData.announcements} 
           tagName={tagData.tag} 
@@ -66,6 +67,24 @@ export const SubmissionsList: React.FC<SubmissionsListProps> = ({ tagData }) => 
         </div>
         
         <div className="controls">
+          {/* Announcements toggle */}
+          {tagData.announcements && tagData.announcements.length > 0 && (
+            <div className="announcements-toggle">
+              <button
+                type="button"
+                onClick={() => setShowAnnouncements(!showAnnouncements)}
+                className={`toggle-button ${showAnnouncements ? 'active' : ''}`}
+                aria-label={showAnnouncements ? 'Hide announcements' : 'Show announcements'}
+              >
+                <span className="toggle-icon">📢</span>
+                <span className="toggle-text">
+                  {showAnnouncements ? 'Hide' : 'Show'} Announcements
+                </span>
+                <span className="announcement-count">({tagData.announcements.length})</span>
+              </button>
+            </div>
+          )}
+          
           <div className="search-box">
             <input
               type="text"

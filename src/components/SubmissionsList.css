@@ -96,6 +96,80 @@
   animation: slideInLeft 0.8s ease-out 0.5s both;
 }
 
+/* Announcements toggle styles */
+.announcements-toggle {
+  display: flex;
+  align-items: center;
+}
+
+.toggle-button {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  background: var(--card-bg);
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: var(--transition-normal);
+  backdrop-filter: blur(16px);
+  box-shadow: var(--shadow-sm);
+  white-space: nowrap;
+}
+
+.toggle-button:hover {
+  border-color: var(--border-hover);
+  background: var(--card-bg-hover);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+
+.toggle-button.active {
+  background: var(--gradient-primary);
+  color: white;
+  border-color: transparent;
+  box-shadow: var(--shadow-glow);
+}
+
+.toggle-button.active:hover {
+  background: var(--gradient-primary);
+  opacity: 0.9;
+}
+
+.toggle-icon {
+  font-size: 1rem;
+  transition: var(--transition-normal);
+}
+
+.toggle-button.active .toggle-icon {
+  animation: bounce 0.5s ease-in-out;
+}
+
+@keyframes bounce {
+  0%, 20%, 60%, 100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-4px);
+  }
+  80% {
+    transform: translateY(-2px);
+  }
+}
+
+.toggle-text {
+  font-weight: 600;
+}
+
+.announcement-count {
+  font-size: 0.8rem;
+  opacity: 0.8;
+  font-weight: 500;
+}
+
 @keyframes slideInLeft {
   from {
     opacity: 0;
@@ -295,6 +369,16 @@
     gap: 1.5rem;
   }
   
+  .announcements-toggle {
+    order: -1; /* Show toggle button first on mobile */
+  }
+  
+  .toggle-button {
+    justify-content: center;
+    padding: 1rem;
+    font-size: 0.95rem;
+  }
+  
   .search-box {
     min-width: unset;
   }
@@ -400,7 +484,8 @@
 
 /* Focus management for accessibility */
 .search-input:focus-visible,
-.sort-select:focus-visible {
+.sort-select:focus-visible,
+.toggle-button:focus-visible {
   outline: 2px solid rgba(102, 126, 234, 0.6);
   outline-offset: 2px;
 }
