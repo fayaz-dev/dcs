@@ -117,7 +117,7 @@ Example submission data structure:
 ```json
 {
   "tag": "devchallenge",
-  "submissions": [...],
+  "submissions": [],
   "fetchedAt": "2025-01-28T..."
 }
 ```
