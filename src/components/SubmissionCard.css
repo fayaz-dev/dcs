@@ -297,6 +297,12 @@
   opacity: 0.8;
 }
 
+.publish-label {
+  font-weight: 600;
+  color: var(--text-secondary);
+  opacity: 0.9;
+}
+
 .stats-section {
   margin-bottom: 1rem;
 }

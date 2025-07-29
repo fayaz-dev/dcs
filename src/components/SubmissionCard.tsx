@@ -75,9 +75,9 @@ export const SubmissionCard: React.FC<SubmissionCardProps> = ({ article }) => {
               >
                 <span className="author-name">{article.user.name}</span>
               </a>
-              <time className="publish-date" dateTime={article.published_at}>
-                {formatDate(article.published_at)}
-              </time>
+              <span className="publish-date">
+                <span className="publish-label">Published:</span> <time dateTime={article.published_at}>{formatDate(article.published_at)}</time>
+              </span>
             </div>
           </div>
           
