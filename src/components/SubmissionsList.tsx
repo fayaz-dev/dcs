@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import type { TagData } from '../types';
 import { SubmissionCard } from './SubmissionCard';
 import { AnnouncementsList } from './AnnouncementsList';
@@ -21,37 +22,46 @@ export const SubmissionsList: React.FC<SubmissionsListProps> = ({
   const [searchTerm, setSearchTerm] = useState('');
   const [isSticky, setIsSticky] = useState(false);
   const [controlsHeight, setControlsHeight] = useState(100);
+  const [hasAnimated, setHasAnimated] = useState(false);
   
-  const controlsRef = useRef<HTMLDivElement>(null);
+  const controlsContainerRef = useRef<HTMLDivElement>(null);
   const sentinelRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const sentinel = sentinelRef.current;
-    const controls = controlsRef.current;
+    const controlsContainer = controlsContainerRef.current;
     
-    if (!sentinel || !controls) return;
+    if (!sentinel || !controlsContainer) return;
 
     // Set initial height
-    const height = controls.offsetHeight;
+    const height = controlsContainer.offsetHeight;
     setControlsHeight(height);
 
     const observer = new IntersectionObserver(
       (entries) => {
         const entry = entries[0];
-        // When sentinel goes out of view at the top, make controls sticky
-        setIsSticky(!entry.isIntersecting && entry.boundingClientRect.top < 0);
+        // Only make sticky when sentinel goes out of view at the TOP (user scrolled past controls)
+        // but not when it goes out of view at the bottom (user is above controls)
+        const shouldBeSticky = !entry.isIntersecting && entry.boundingClientRect.top < 0;
+        
+        // Mark as animated when becoming sticky for the first time
+        if (shouldBeSticky && !hasAnimated) {
+          setHasAnimated(true);
+        }
+        
+        setIsSticky(shouldBeSticky);
       },
       {
         threshold: 0,
-        rootMargin: '0px 0px 0px 0px'
+        rootMargin: '0px'
       }
     );
 
     observer.observe(sentinel);
 
     const handleResize = () => {
-      if (!isSticky) {
-        const height = controls.offsetHeight;
+      if (!isSticky && controlsContainer) {
+        const height = controlsContainer.offsetHeight;
         setControlsHeight(height);
       }
     };
@@ -84,8 +94,59 @@ export const SubmissionsList: React.FC<SubmissionsListProps> = ({
     }
   }, [tagData.submissions, sortBy, searchTerm]);
 
+  // Sticky controls component rendered via portal
+  const StickyControls = () => {
+    if (!isSticky) return null;
+    
+    return createPortal(
+      <div className={`controls-container sticky ${!hasAnimated ? 'animate-in' : ''}`}>
+        <div className="controls">
+          <TagInfo tagName={tagData.tag} />
+          
+          <div className="search-box">
+            <input
+              type="text"
+              placeholder="Search submissions..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="search-input"
+            />
+          </div>
+          
+          <div className="sort-controls">
+            <span className="sort-label">
+              <span className="sort-icon">⚡</span>
+              Sort by
+            </span>
+            <div className="sort-dropdown-wrapper">
+              <select
+                id="sort-select"
+                value={sortBy}
+                onChange={(e) => setSortBy(e.target.value as SortOption)}
+                className="sort-select"
+              >
+                <option value="latest">🕒 Latest</option>
+                <option value="popular">❤️ Most Popular</option>
+                <option value="comments">💬 Most Comments</option>
+              </select>
+              <div className="sort-dropdown-arrow">
+                <svg width="12" height="8" viewBox="0 0 12 8" fill="none">
+                  <path d="M1 1.5L6 6.5L11 1.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>,
+      document.body
+    );
+  };
+
   return (
     <div className="submissions-list">
+      {/* Render sticky controls via portal when needed */}
+      <StickyControls />
+      
       {/* Show announcements first if they exist and toggle is enabled */}
       {showAnnouncements && tagData.announcements && tagData.announcements.length > 0 && (
         <AnnouncementsList 
@@ -102,54 +163,57 @@ export const SubmissionsList: React.FC<SubmissionsListProps> = ({
       />
       
       <div className="list-header">
-        {/* Sentinel element to detect when to make controls sticky */}
-        <div ref={sentinelRef} className="controls-sentinel" />
-        
-        <div className="controls-container">
+        <div 
+          className="controls-container"
+          ref={controlsContainerRef}
+        >
           {/* Spacer to maintain layout when controls become sticky */}
           {isSticky && <div className="controls-spacer" style={{ height: `${controlsHeight}px` }} />}
           
-          <div 
-            className={`controls ${isSticky ? 'controls-sticky' : ''}`} 
-            ref={controlsRef}
-          >
-            {/* Tag info with dev.to link */}
-            <TagInfo tagName={tagData.tag} />
-            
-            <div className="search-box">
-              <input
-                type="text"
-                placeholder="Search submissions..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="search-input"
-              />
-            </div>
-            
-            <div className="sort-controls">
-              <span className="sort-label">
-                <span className="sort-icon">⚡</span>
-                Sort by
-              </span>
-              <div className="sort-dropdown-wrapper">
-                <select
-                  id="sort-select"
-                  value={sortBy}
-                  onChange={(e) => setSortBy(e.target.value as SortOption)}
-                  className="sort-select"
-                >
-                  <option value="latest">🕒 Latest</option>
-                  <option value="popular">❤️ Most Popular</option>
-                  <option value="comments">💬 Most Comments</option>
-                </select>
-                <div className="sort-dropdown-arrow">
-                  <svg width="12" height="8" viewBox="0 0 12 8" fill="none">
-                    <path d="M1 1.5L6 6.5L11 1.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                  </svg>
+          {/* Regular controls - only show when not sticky */}
+          {!isSticky && (
+            <div className="controls">
+              {/* Tag info with dev.to link */}
+              <TagInfo tagName={tagData.tag} />
+              
+              <div className="search-box">
+                <input
+                  type="text"
+                  placeholder="Search submissions..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="search-input"
+                />
+              </div>
+              
+              <div className="sort-controls">
+                <span className="sort-label">
+                  <span className="sort-icon">⚡</span>
+                  Sort by
+                </span>
+                <div className="sort-dropdown-wrapper">
+                  <select
+                    id="sort-select"
+                    value={sortBy}
+                    onChange={(e) => setSortBy(e.target.value as SortOption)}
+                    className="sort-select"
+                  >
+                    <option value="latest">🕒 Latest</option>
+                    <option value="popular">❤️ Most Popular</option>
+                    <option value="comments">💬 Most Comments</option>
+                  </select>
+                  <div className="sort-dropdown-arrow">
+                    <svg width="12" height="8" viewBox="0 0 12 8" fill="none">
+                      <path d="M1 1.5L6 6.5L11 1.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
+          )}
+          
+          {/* Sentinel element placed at the bottom of controls to detect when user scrolls past */}
+          <div ref={sentinelRef} className="controls-sentinel" />
         </div>
       </div>
 
