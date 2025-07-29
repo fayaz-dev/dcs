@@ -75,11 +75,53 @@ export const SubmissionCard: React.FC<SubmissionCardProps> = ({ article }) => {
               >
                 <span className="author-name">{article.user.name}</span>
               </a>
+              
               <span className="publish-date">
                 <span className="publish-label">Published:</span> <time dateTime={article.published_at}>{formatDate(article.published_at)}</time>
               </span>
             </div>
           </div>
+          
+          {(article.user.github_username || article.user.twitter_username || article.user.website_url) && (
+            <div className="author-social-links">
+              {article.user.github_username && (
+                <a 
+                  href={`https://github.com/${article.user.github_username}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="social-link github-link"
+                  title={`${article.user.name} on GitHub`}
+                >
+                  <span className="social-icon">⚡</span>
+                  <span className="social-text">GitHub</span>
+                </a>
+              )}
+              {article.user.twitter_username && (
+                <a 
+                  href={`https://twitter.com/${article.user.twitter_username}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="social-link twitter-link"
+                  title={`${article.user.name} on Twitter`}
+                >
+                  <span className="social-icon">🐦</span>
+                  <span className="social-text">Twitter</span>
+                </a>
+              )}
+              {article.user.website_url && (
+                <a 
+                  href={article.user.website_url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="social-link website-link"
+                  title={`${article.user.name}'s website`}
+                >
+                  <span className="social-icon">🌐</span>
+                  <span className="social-text">Website</span>
+                </a>
+              )}
+            </div>
+          )}
           
           <div className="stats-section">
             <div className="article-stats">

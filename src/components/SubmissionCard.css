@@ -286,6 +286,54 @@
   text-overflow: ellipsis;
   letter-spacing: -0.01em;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  transition: var(--transition-normal);
+}
+
+.author-social-links {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.75rem;
+  padding-left: 1rem;
+}
+
+.social-link {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  text-decoration: none;
+  color: var(--text-muted);
+  font-size: 0.7rem;
+  font-weight: 500;
+  padding: 0.25rem 0.5rem;
+  border-radius: 12px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  transition: var(--transition-fast);
+  white-space: nowrap;
+}
+
+.social-link:hover {
+  color: var(--text-secondary);
+  background: var(--bg-tertiary);
+  border-color: rgba(102, 126, 234, 0.3);
+  transform: translateY(-1px);
+}
+
+.social-link:focus {
+  outline: 2px solid var(--accent-primary);
+  outline-offset: 1px;
+}
+
+.social-icon {
+  font-size: 0.75rem;
+  opacity: 0.8;
+}
+
+.social-text {
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.025em;
 }
 
 .publish-date {

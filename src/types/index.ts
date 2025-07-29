@@ -4,6 +4,9 @@ export interface ForemUser {
   username: string;
   profile_image: string;
   profile_image_90: string;
+  twitter_username?: string;
+  github_username?: string;
+  website_url?: string;
 }
 
 export interface ForemOrganization {
