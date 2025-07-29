@@ -130,15 +130,19 @@
   align-items: center;
   gap: 6px;
   font-size: 0.875rem;
-  opacity: 0.9;
+  opacity: 1;
+  color: white;
 }
 
 .stat-icon {
   font-size: 1rem;
+  opacity: 1;
 }
 
 .stat-count {
-  font-weight: 500;
+  font-weight: 600;
+  color: white;
+  opacity: 1;
 }
 
 @media (max-width: 768px) {
