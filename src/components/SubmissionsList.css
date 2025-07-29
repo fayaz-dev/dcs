@@ -235,40 +235,142 @@
   white-space: nowrap;
   background: var(--card-bg);
   padding: 1rem 1.5rem;
-  border-radius: 12px;
+  border-radius: 16px;
   border: 1px solid var(--border-color);
   backdrop-filter: blur(16px);
   box-shadow: var(--shadow-sm);
-  height: 56px; /* Match other controls height */
+  height: 56px;
   box-sizing: border-box;
+  position: relative;
+  overflow: hidden;
+  transition: var(--transition-normal);
 }
 
-.sort-controls label {
+.sort-controls::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--gradient-primary);
+  opacity: 0.02;
+  z-index: -1;
+  transition: var(--transition-normal);
+}
+
+.sort-controls:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+  border-color: var(--border-hover);
+}
+
+.sort-controls:hover::before {
+  opacity: 0.05;
+}
+
+.sort-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
   font-size: 0.95rem;
-  color: var(--text-secondary);
+  color: var(--text-primary);
   font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.sort-icon {
+  font-size: 1.1rem;
+  animation: sparkle 2s ease-in-out infinite;
+}
+
+@keyframes sparkle {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.7; transform: scale(1.1); }
+}
+
+.sort-dropdown-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
 }
 
 .sort-select {
-  padding: 0.5rem 1rem;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  padding: 0.75rem 2.5rem 0.75rem 1rem;
   border: 1px solid var(--border-color);
-  border-radius: 10px;
+  border-radius: 12px;
   background: var(--bg-primary);
   color: var(--text-primary);
-  font-size: 0.95rem;
+  font-size: 0.8rem;
   cursor: pointer;
   transition: var(--transition-normal);
-  font-weight: 500;
-  min-width: 140px;
-  height: 36px; /* Adjust to fit within parent container */
+  font-weight: 600;
+  min-width: 160px;
+  height: 40px;
+  box-sizing: border-box;
+  position: relative;
+  background-image: none;
+  box-shadow: var(--shadow-sm);
+  letter-spacing: -0.01em;
+  outline: none;
+}
+
+.sort-select:hover {
+  border-color: var(--border-hover);
+  background: var(--card-bg);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+
+.sort-select:focus {
+  border-color: transparent;
+  box-shadow: var(--shadow-glow), 0 0 0 3px rgba(102, 126, 234, 0.1);
+  background: var(--card-bg-hover);
+  transform: translateY(-1px);
+}
+
+.sort-select:active {
+  transform: translateY(0);
+  box-shadow: var(--shadow-sm);
+}
+
+.sort-dropdown-arrow {
+  position: absolute;
+  right: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  color: var(--text-secondary);
+  transition: var(--transition-normal);
+  z-index: 1;
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(-50%) translateX(0); }
+  50% { transform: translateY(-50%) translateX(1px); }
+}
+
+.sort-select:hover + .sort-dropdown-arrow,
+.sort-select:focus + .sort-dropdown-arrow {
+  color: var(--text-primary);
+  transform: translateY(-50%) scale(1.1) rotate(180deg);
+  animation: none;
+}
+
+.sort-select:focus + .sort-dropdown-arrow {
+  color: rgba(102, 126, 234, 0.8);
+  filter: drop-shadow(0 0 6px rgba(102, 126, 234, 0.3));
 }
 
 .sort-select option {
   background: var(--bg-primary);
   color: var(--text-primary);
-  padding: 0.5rem;
-  font-weight: 500;
+  padding: 0.75rem;
+  font-weight: 600;
   border: none;
+  font-size: 0.95rem;
+  letter-spacing: -0.01em;
 }
 
 /* Fallback for better browser compatibility */
@@ -298,18 +400,6 @@
     background-color: #fafafa;
     color: #09090b;
   }
-}
-
-.sort-select:focus {
-  outline: none;
-  border-color: transparent;
-  box-shadow: var(--shadow-glow);
-  transform: translateY(-1px);
-}
-
-.sort-select:hover {
-  border-color: var(--border-hover);
-  background: var(--card-bg);
 }
 
 .submissions-grid {
@@ -447,18 +537,25 @@
   .sort-controls {
     flex-direction: column;
     align-items: stretch;
-    gap: 0.75rem;
-    padding: 1rem;
+    gap: 1rem;
+    padding: 1.25rem;
     height: auto; /* Allow flexible height when in column layout */
   }
   
-  .sort-controls label {
+  .sort-label {
     text-align: center;
+    font-size: 1rem;
+  }
+  
+  .sort-dropdown-wrapper {
+    width: 100%;
   }
   
   .sort-select {
     min-width: unset;
-    height: 36px; /* Maintain select height */
+    width: 100%;
+    height: 44px; /* Slightly larger on mobile */
+    font-size: 1rem;
   }
   
   .search-input {

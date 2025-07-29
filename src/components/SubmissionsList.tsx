@@ -96,17 +96,27 @@ export const SubmissionsList: React.FC<SubmissionsListProps> = ({ tagData }) => 
           </div>
           
           <div className="sort-controls">
-            <label htmlFor="sort-select">Sort by:</label>
-            <select
-              id="sort-select"
-              value={sortBy}
-              onChange={(e) => setSortBy(e.target.value as SortOption)}
-              className="sort-select"
-            >
-              <option value="latest">Latest</option>
-              <option value="popular">Most Popular</option>
-              <option value="comments">Most Comments</option>
-            </select>
+            <span className="sort-label">
+              <span className="sort-icon">⚡</span>
+              Sort by
+            </span>
+            <div className="sort-dropdown-wrapper">
+              <select
+                id="sort-select"
+                value={sortBy}
+                onChange={(e) => setSortBy(e.target.value as SortOption)}
+                className="sort-select"
+              >
+                <option value="latest">🕒 Latest</option>
+                <option value="popular">❤️ Most Popular</option>
+                <option value="comments">💬 Most Comments</option>
+              </select>
+              <div className="sort-dropdown-arrow">
+                <svg width="12" height="8" viewBox="0 0 12 8" fill="none">
+                  <path d="M1 1.5L6 6.5L11 1.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              </div>
+            </div>
           </div>
         </div>
       </div>
