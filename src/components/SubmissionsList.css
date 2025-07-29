@@ -301,12 +301,12 @@
   border-radius: 12px;
   background: var(--bg-primary);
   color: var(--text-primary);
-  font-size: 0.8rem;
+  font-size: 0.9rem;
   cursor: pointer;
   transition: var(--transition-normal);
   font-weight: 600;
   min-width: 160px;
-  height: 40px;
+  height: 44px;
   box-sizing: border-box;
   position: relative;
   background-image: none;
