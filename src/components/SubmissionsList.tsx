@@ -4,6 +4,7 @@ import { SubmissionCard } from './SubmissionCard';
 import { AnnouncementsList } from './AnnouncementsList';
 import { TagInfo } from './TagInfo';
 import { TagHeader } from './TagHeader';
+import { getRelevanceScores, clearExpiredCache } from '../utils/relevanceScore';
 import './SubmissionsList.css';
 
 interface SubmissionsListProps {
@@ -68,12 +69,13 @@ export const SubmissionsList: React.FC<SubmissionsListProps> = ({
   tagData, 
   showAnnouncements = true 
 }) => {
-  const [sortBy, setSortBy] = useState<SortOption>('latest');
+  const [sortBy, setSortBy] = useState<SortOption>('relevant');
   const [searchTerm, setSearchTerm] = useState('');
   const [isSticky, setIsSticky] = useState(false);
   const [controlsHeight, setControlsHeight] = useState(100);
   const [hasAnimated, setHasAnimated] = useState(false);
   const [initialAnimationComplete, setInitialAnimationComplete] = useState(false);
+  const [relevanceScores, setRelevanceScores] = useState<Map<number, number>>(new Map());
   
   const controlsContainerRef = useRef<HTMLDivElement>(null);
   const sentinelRef = useRef<HTMLDivElement>(null);
@@ -86,6 +88,15 @@ export const SubmissionsList: React.FC<SubmissionsListProps> = ({
   const handleSortChange = useCallback((value: SortOption) => {
     setSortBy(value);
   }, []);
+
+  // Precompute relevance scores when submissions change
+  useEffect(() => {
+    const scores = getRelevanceScores(tagData.tag, tagData.submissions);
+    setRelevanceScores(scores);
+    
+    // Clear expired cache on component mount
+    clearExpiredCache();
+  }, [tagData.tag, tagData.submissions]);
 
   // Memoized sorted submissions to prevent recalculation on unrelated renders
   const sortedSubmissions = React.useMemo(() => {
@@ -102,32 +113,9 @@ export const SubmissionsList: React.FC<SubmissionsListProps> = ({
         return [...filtered].sort((a, b) => b.comments_count - a.comments_count);
       case 'relevant':
         return [...filtered].sort((a, b) => {
-          // Calculate relevance score (100 points total)
-          const calculateRelevanceScore = (article: any) => {
-            const maxReactions = Math.max(...filtered.map(a => a.positive_reactions_count));
-            const maxComments = Math.max(...filtered.map(a => a.comments_count));
-            
-            // Get the most recent date (edited_at or published_at)
-            const getRecentDate = (article: any) => {
-              const editedDate = article.edited_at ? new Date(article.edited_at).getTime() : 0;
-              const publishedDate = new Date(article.published_at).getTime();
-              return Math.max(editedDate, publishedDate);
-            };
-            
-            const articleRecentDate = getRecentDate(article);
-            const maxRecentDate = Math.max(...filtered.map(getRecentDate));
-            const minRecentDate = Math.min(...filtered.map(getRecentDate));
-            
-            // Calculate scores (avoid division by zero)
-            const reactionScore = maxReactions > 0 ? (article.positive_reactions_count / maxReactions) * 50 : 0;
-            const commentScore = maxComments > 0 ? (article.comments_count / maxComments) * 30 : 0;
-            const recencyScore = maxRecentDate > minRecentDate ? 
-              ((articleRecentDate - minRecentDate) / (maxRecentDate - minRecentDate)) * 20 : 20;
-            
-            return reactionScore + commentScore + recencyScore;
-          };
-          
-          return calculateRelevanceScore(b) - calculateRelevanceScore(a);
+          const scoreA = relevanceScores.get(a.id) || 0;
+          const scoreB = relevanceScores.get(b.id) || 0;
+          return scoreB - scoreA;
         });
       case 'latest':
       default:
@@ -135,7 +123,7 @@ export const SubmissionsList: React.FC<SubmissionsListProps> = ({
           new Date(b.published_at).getTime() - new Date(a.published_at).getTime()
         );
     }
-  }, [tagData.submissions, sortBy, searchTerm]);
+  }, [tagData.submissions, sortBy, searchTerm, relevanceScores]);
 
   // Mark initial animation as complete after component mounts
   useEffect(() => {
