@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import type { TagData } from '../types';
 import { SubmissionCard } from './SubmissionCard';
 import { AnnouncementsList } from './AnnouncementsList';
@@ -18,6 +18,50 @@ export const SubmissionsList: React.FC<SubmissionsListProps> = ({
 }) => {
   const [sortBy, setSortBy] = useState<SortOption>('latest');
   const [searchTerm, setSearchTerm] = useState('');
+  const [isSticky, setIsSticky] = useState(false);
+  const [controlsHeight, setControlsHeight] = useState(100);
+  
+  const controlsRef = useRef<HTMLDivElement>(null);
+  const sentinelRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const sentinel = sentinelRef.current;
+    const controls = controlsRef.current;
+    
+    if (!sentinel || !controls) return;
+
+    // Set initial height
+    const height = controls.offsetHeight;
+    setControlsHeight(height);
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const entry = entries[0];
+        // When sentinel goes out of view at the top, make controls sticky
+        setIsSticky(!entry.isIntersecting && entry.boundingClientRect.top < 0);
+      },
+      {
+        threshold: 0,
+        rootMargin: '0px 0px 0px 0px'
+      }
+    );
+
+    observer.observe(sentinel);
+
+    const handleResize = () => {
+      if (!isSticky) {
+        const height = controls.offsetHeight;
+        setControlsHeight(height);
+      }
+    };
+
+    window.addEventListener('resize', handleResize, { passive: true });
+
+    return () => {
+      observer.disconnect();
+      window.removeEventListener('resize', handleResize);
+    };
+  }, [isSticky]);
 
   const sortedSubmissions = React.useMemo(() => {
     let filtered = tagData.submissions.filter(article =>
@@ -70,40 +114,51 @@ export const SubmissionsList: React.FC<SubmissionsListProps> = ({
           </span>
         </div>
         
-        <div className="controls">
-          {/* Tag info with dev.to link */}
-          <TagInfo tagName={tagData.tag} />
+        {/* Sentinel element to detect when to make controls sticky */}
+        <div ref={sentinelRef} className="controls-sentinel" />
+        
+        <div className="controls-container">
+          {/* Spacer to maintain layout when controls become sticky */}
+          {isSticky && <div className="controls-spacer" style={{ height: `${controlsHeight}px` }} />}
           
-          <div className="search-box">
-            <input
-              type="text"
-              placeholder="Search submissions..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="search-input"
-            />
-          </div>
-          
-          <div className="sort-controls">
-            <span className="sort-label">
-              <span className="sort-icon">⚡</span>
-              Sort by
-            </span>
-            <div className="sort-dropdown-wrapper">
-              <select
-                id="sort-select"
-                value={sortBy}
-                onChange={(e) => setSortBy(e.target.value as SortOption)}
-                className="sort-select"
-              >
-                <option value="latest">🕒 Latest</option>
-                <option value="popular">❤️ Most Popular</option>
-                <option value="comments">💬 Most Comments</option>
-              </select>
-              <div className="sort-dropdown-arrow">
-                <svg width="12" height="8" viewBox="0 0 12 8" fill="none">
-                  <path d="M1 1.5L6 6.5L11 1.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                </svg>
+          <div 
+            className={`controls ${isSticky ? 'controls-sticky' : ''}`} 
+            ref={controlsRef}
+          >
+            {/* Tag info with dev.to link */}
+            <TagInfo tagName={tagData.tag} />
+            
+            <div className="search-box">
+              <input
+                type="text"
+                placeholder="Search submissions..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="search-input"
+              />
+            </div>
+            
+            <div className="sort-controls">
+              <span className="sort-label">
+                <span className="sort-icon">⚡</span>
+                Sort by
+              </span>
+              <div className="sort-dropdown-wrapper">
+                <select
+                  id="sort-select"
+                  value={sortBy}
+                  onChange={(e) => setSortBy(e.target.value as SortOption)}
+                  className="sort-select"
+                >
+                  <option value="latest">🕒 Latest</option>
+                  <option value="popular">❤️ Most Popular</option>
+                  <option value="comments">💬 Most Comments</option>
+                </select>
+                <div className="sort-dropdown-arrow">
+                  <svg width="12" height="8" viewBox="0 0 12 8" fill="none">
+                    <path d="M1 1.5L6 6.5L11 1.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                </div>
               </div>
             </div>
           </div>
