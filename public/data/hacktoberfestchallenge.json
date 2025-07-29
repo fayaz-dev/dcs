@@ -5105,7 +5105,7 @@
       "edited_at": "2024-10-18T17:36:50Z",
       "crossposted_at": null,
       "published_at": "2024-10-18T17:31:20Z",
-      "last_comment_at": "2024-10-21T13:53:25Z",
+      "last_comment_at": "2025-07-28T19:07:52Z",
       "reading_time_minutes": 2,
       "tag_list": [
         "devchallenge",
@@ -6162,49 +6162,6 @@
         "website_url": "https://vanshchaurasiya.me",
         "profile_image": "https://media2.dev.to/dynamic/image/width=640,height=640,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Fuser%2Fprofile_image%2F2130304%2Fe706f7c4-a310-46b6-8a4f-8611a2af88a5.jpg",
         "profile_image_90": "https://media2.dev.to/dynamic/image/width=90,height=90,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Fuser%2Fprofile_image%2F2130304%2Fe706f7c4-a310-46b6-8a4f-8611a2af88a5.jpg"
-      }
-    },
-    {
-      "type_of": "article",
-      "id": 2037634,
-      "title": "> Ready,Set,Hack ! with Hacktoberfest 2024 🚀",
-      "description": "1️⃣ Getting Started    Joined Hacktoberfest for the second time with excitement. Explored...",
-      "readable_publish_date": "Oct 14 '24",
-      "slug": "my-hacktoberfest-2024-experience-47be",
-      "path": "/jagroop2001/my-hacktoberfest-2024-experience-47be",
-      "url": "https://dev.to/jagroop2001/my-hacktoberfest-2024-experience-47be",
-      "comments_count": 2,
-      "public_reactions_count": 22,
-      "collection_id": null,
-      "published_timestamp": "2024-10-14T10:54:29Z",
-      "language": "en",
-      "subforem_id": null,
-      "positive_reactions_count": 22,
-      "cover_image": "https://media2.dev.to/dynamic/image/width=1000,height=420,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Farticles%2Fog64lmrw40gvvefu3bxx.png",
-      "social_image": "https://media2.dev.to/dynamic/image/width=1000,height=500,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Farticles%2Fog64lmrw40gvvefu3bxx.png",
-      "canonical_url": "https://dev.to/jagroop2001/my-hacktoberfest-2024-experience-47be",
-      "created_at": "2024-10-14T10:54:30Z",
-      "edited_at": "2024-10-30T05:21:55Z",
-      "crossposted_at": null,
-      "published_at": "2024-10-14T10:54:29Z",
-      "last_comment_at": "2024-10-30T05:24:09Z",
-      "reading_time_minutes": 2,
-      "tag_list": [
-        "devchallenge",
-        "hacktoberfestchallenge",
-        "hacktoberfest",
-        "opensource"
-      ],
-      "tags": "devchallenge, hacktoberfestchallenge, hacktoberfest, opensource",
-      "user": {
-        "name": "Jagroop Singh",
-        "username": "jagroop2001",
-        "twitter_username": "jaehan_oo",
-        "github_username": "Jagroop2001",
-        "user_id": 842521,
-        "website_url": "https://www.linkedin.com/in/jagroop-singh-7a59b4327/",
-        "profile_image": "https://media2.dev.to/dynamic/image/width=640,height=640,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Fuser%2Fprofile_image%2F842521%2Fd8f92227-f47b-446d-8752-56f7e73fd4b7.jpg",
-        "profile_image_90": "https://media2.dev.to/dynamic/image/width=90,height=90,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Fuser%2Fprofile_image%2F842521%2Fd8f92227-f47b-446d-8752-56f7e73fd4b7.jpg"
       }
     },
     {
@@ -7291,7 +7248,7 @@
         "twitter_username": null,
         "github_username": "rahulgithub-web",
         "user_id": 1446429,
-        "website_url": "https://www.polywork.com/rahulkumar_barnw",
+        "website_url": "https://rahul-developer.vercel.app/",
         "profile_image": "https://media2.dev.to/dynamic/image/width=640,height=640,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Fuser%2Fprofile_image%2F1446429%2F7a131f39-7448-4d6f-b1da-11e0e42359e1.jpeg",
         "profile_image_90": "https://media2.dev.to/dynamic/image/width=90,height=90,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Fuser%2Fprofile_image%2F1446429%2F7a131f39-7448-4d6f-b1da-11e0e42359e1.jpeg"
       }
@@ -7691,5 +7648,5 @@
       }
     }
   ],
-  "fetchedAt": "2025-07-28T11:24:48.434Z"
+  "fetchedAt": "2025-07-29T20:43:33.188Z"
 }
