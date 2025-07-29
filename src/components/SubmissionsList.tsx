@@ -122,7 +122,7 @@ export const SubmissionsList: React.FC<SubmissionsListProps> = ({
     
     if (!sentinel || !controlsContainer) return;
 
-    // Set initial height
+    // Set initial height - now both normal and sticky have same height
     const height = controlsContainer.offsetHeight;
     setControlsHeight(height);
 

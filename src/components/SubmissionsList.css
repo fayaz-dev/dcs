@@ -74,7 +74,7 @@
   backdrop-filter: blur(20px);
   border-bottom: 1px solid var(--border-color);
   border-radius: 0; /* Remove border radius when sticky */
-  padding: 1rem 2rem;
+  padding: 2rem; /* Keep same padding as normal state to maintain height */
   margin: 0;
   box-shadow: var(--shadow-lg);
   transform: translateZ(0); /* Maintain hardware acceleration */
