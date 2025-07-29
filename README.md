@@ -2,6 +2,8 @@
 
 A modern web application for browsing dev challenge submissions from dev.to. This app consists of a CLI tool to fetch submissions, a React web interface to display them, and an MCP server for AI assistant integration.
 
+![React web interface demo](https://github.com/user-attachments/assets/03fc5b73-e23a-4760-a3a4-daf7d86631d5)
+
 ## Features
 
 - **CLI Tool**: Fetch, update, and manage submissions from dev.to using the Forem API
