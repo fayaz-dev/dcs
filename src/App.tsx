@@ -4,6 +4,7 @@ import { SubmissionsList } from './components/SubmissionsList';
 import { LoadingSpinner } from './components/LoadingSpinner';
 import { ErrorDisplay } from './components/ErrorDisplay';
 import { ThemeToggle } from './components/ThemeToggle';
+import { HeroImage } from './components/HeroImage';
 import './App.css';
 
 function App() {
@@ -22,9 +23,10 @@ function App() {
       <ThemeToggle />
       
       <header className="app-header">
+        <HeroImage />
         <h1 className="app-title">Dev Challenge Submissions</h1>
         <p className="app-description">
-          Browse submissions from dev.to challenges
+          Challenge submissions from dev.to
         </p>
       </header>
 

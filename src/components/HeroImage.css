@@ -1,0 +1,299 @@
+.hero-image {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 2rem 0;
+  position: relative;
+}
+
+.hero-svg {
+  max-width: 100%;
+  height: auto;
+  filter: drop-shadow(0 10px 30px rgba(102, 126, 234, 0.3));
+  animation: heroFloat 6s ease-in-out infinite;
+}
+
+/* Main floating animation */
+@keyframes heroFloat {
+  0%, 100% { 
+    transform: translateY(0px);
+  }
+  50% { 
+    transform: translateY(-10px);
+  }
+}
+
+/* Stars twinkling animation */
+.star {
+  animation: twinkle 3s ease-in-out infinite;
+  transform-origin: center;
+}
+
+.star-1 { animation-delay: 0s; }
+.star-2 { animation-delay: 0.5s; }
+.star-3 { animation-delay: 1s; }
+.star-4 { animation-delay: 1.5s; }
+.star-5 { animation-delay: 2s; }
+.star-6 { animation-delay: 2.5s; }
+
+@keyframes twinkle {
+  0%, 100% { 
+    opacity: 0.6; 
+    transform: scale(1);
+  }
+  50% { 
+    opacity: 1; 
+    transform: scale(1.2);
+  }
+}
+
+/* Code editor animations */
+.editor-frame {
+  animation: editorGlow 4s ease-in-out infinite alternate;
+}
+
+@keyframes editorGlow {
+  0% { 
+    filter: drop-shadow(0 0 10px rgba(102, 126, 234, 0.4));
+  }
+  100% { 
+    filter: drop-shadow(0 0 20px rgba(102, 126, 234, 0.8));
+  }
+}
+
+.traffic-light {
+  animation: trafficBlink 2s ease-in-out infinite;
+}
+
+.traffic-light:nth-child(2) { animation-delay: 0.2s; }
+.traffic-light:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes trafficBlink {
+  0%, 90%, 100% { opacity: 1; }
+  95% { opacity: 0.5; }
+}
+
+/* Code lines typing animation */
+.code-line {
+  animation: typing 4s ease-in-out infinite;
+  transform-origin: left;
+}
+
+.line-1 { animation-delay: 0s; }
+.line-2 { animation-delay: 0.3s; }
+.line-3 { animation-delay: 0.6s; }
+.line-4 { animation-delay: 0.9s; }
+.line-5 { animation-delay: 1.2s; }
+.line-6 { animation-delay: 1.5s; }
+
+@keyframes typing {
+  0%, 80%, 100% { 
+    transform: scaleX(1);
+    opacity: 1;
+  }
+  85%, 95% { 
+    transform: scaleX(0.8);
+    opacity: 0.7;
+  }
+}
+
+/* Cursor blinking */
+.cursor {
+  animation: blink 1s step-end infinite;
+}
+
+@keyframes blink {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0; }
+}
+
+/* Trophy animations */
+.trophy {
+  animation: trophyBounce 3s ease-in-out infinite;
+}
+
+@keyframes trophyBounce {
+  0%, 100% { 
+    transform: translate(280px, 70px) translateY(0px);
+  }
+  50% { 
+    transform: translate(280px, 70px) translateY(-5px);
+  }
+}
+
+.trophy-cup {
+  animation: trophyShine 5s linear infinite;
+}
+
+@keyframes trophyShine {
+  0%, 100% { 
+    filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.4));
+  }
+  50% { 
+    filter: drop-shadow(0 0 20px rgba(255, 215, 0, 0.8));
+  }
+}
+
+.trophy-star {
+  animation: starSpin 8s linear infinite;
+  transform-origin: center;
+}
+
+@keyframes starSpin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Rocket animations */
+.rocket {
+  animation: rocketFly 5s ease-in-out infinite;
+}
+
+@keyframes rocketFly {
+  0%, 100% { 
+    transform: translate(120px, 40px) translateY(0px) rotate(0deg);
+  }
+  25% { 
+    transform: translate(120px, 40px) translateY(-8px) rotate(2deg);
+  }
+  75% { 
+    transform: translate(120px, 40px) translateY(-8px) rotate(-2deg);
+  }
+}
+
+.rocket-body {
+  animation: rocketPulse 2s ease-in-out infinite;
+}
+
+@keyframes rocketPulse {
+  0%, 100% { 
+    transform: scale(1);
+  }
+  50% { 
+    transform: scale(1.05);
+  }
+}
+
+/* Flame animation */
+.flame {
+  animation: flameFlicker 0.5s ease-in-out infinite alternate;
+  transform-origin: top;
+}
+
+@keyframes flameFlicker {
+  0% { 
+    transform: scaleY(1) scaleX(1);
+  }
+  100% { 
+    transform: scaleY(1.1) scaleX(0.95);
+  }
+}
+
+.flame-outer {
+  animation: flameOuter 0.3s ease-in-out infinite alternate;
+}
+
+.flame-inner {
+  animation: flameInner 0.4s ease-in-out infinite alternate;
+}
+
+@keyframes flameOuter {
+  0% { opacity: 0.8; }
+  100% { opacity: 1; }
+}
+
+@keyframes flameInner {
+  0% { opacity: 0.9; }
+  100% { opacity: 1; }
+}
+
+/* Floating symbols */
+.floating-symbols .symbol {
+  animation: symbolFloat 4s ease-in-out infinite;
+}
+
+.symbol-1 { animation-delay: 0s; }
+.symbol-2 { animation-delay: 1s; }
+.symbol-3 { animation-delay: 2s; }
+.symbol-4 { animation-delay: 3s; }
+
+@keyframes symbolFloat {
+  0%, 100% { 
+    transform: translateY(0px) rotate(0deg);
+    opacity: 0.6;
+  }
+  50% { 
+    transform: translateY(-15px) rotate(5deg);
+    opacity: 1;
+  }
+}
+
+/* Network lines */
+.network-line {
+  stroke-dasharray: 4 4;
+  animation: networkPulse 3s ease-in-out infinite;
+}
+
+.line-1 { animation-delay: 0s; }
+.line-2 { animation-delay: 1s; }
+.line-3 { animation-delay: 2s; }
+
+@keyframes networkPulse {
+  0%, 100% { 
+    stroke-dashoffset: 0;
+    opacity: 0.3;
+  }
+  50% { 
+    stroke-dashoffset: 8;
+    opacity: 0.8;
+  }
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .hero-svg {
+    width: 90%;
+    max-width: 350px;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-svg {
+    width: 95%;
+    max-width: 300px;
+  }
+  
+  .hero-image {
+    margin: 1rem 0;
+  }
+}
+
+/* Theme-specific adjustments */
+:root.light .hero-svg,
+[data-theme="light"] .hero-svg {
+  filter: drop-shadow(0 10px 30px rgba(102, 126, 234, 0.2));
+}
+
+:root.dark .hero-svg,
+[data-theme="dark"] .hero-svg {
+  filter: drop-shadow(0 10px 30px rgba(102, 126, 234, 0.4));
+}
+
+/* Hover effects */
+.hero-image:hover .hero-svg {
+  animation-duration: 4s;
+  transform: scale(1.02);
+  transition: transform 0.3s ease-out;
+}
+
+.hero-image:hover .stars .star {
+  animation-duration: 2s;
+}
+
+.hero-image:hover .rocket {
+  animation-duration: 3s;
+}
+
+.hero-image:hover .trophy {
+  animation-duration: 2s;
+}
