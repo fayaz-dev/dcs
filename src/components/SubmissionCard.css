@@ -221,8 +221,8 @@
 }
 
 .author-avatar {
-  width: 52px;
-  height: 52px;
+  width: 90px;
+  height: 90px;
   border-radius: 50%;
   object-fit: cover;
   border: 2px solid var(--border-color);
@@ -422,8 +422,8 @@
   }
   
   .author-avatar {
-    width: 48px;
-    height: 48px;
+    width: 64px;
+    height: 64px;
   }
 }
 
@@ -461,8 +461,8 @@
   }
   
   .author-avatar {
-    width: 44px;
-    height: 44px;
+    width: 56px;
+    height: 56px;
   }
   
   .author-name {
