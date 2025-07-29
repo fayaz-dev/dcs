@@ -55,10 +55,6 @@ export const TagSelector: React.FC<TagSelectorProps> = ({
             </div>
           )}
         </div>
-        
-        <h2 className="selected-tag">
-          Submissions for: <span className="tag-name">#{selectedTag}</span>
-        </h2>
       </div>
     );
   }

@@ -35,59 +35,6 @@
   z-index: -1;
 }
 
-.submissions-count {
-  margin-bottom: 2rem;
-  text-align: center;
-  animation: countUp 1s ease-out 0.3s both;
-}
-
-@keyframes countUp {
-  from {
-    opacity: 0;
-    transform: scale(0.8);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
-.count {
-  font-size: clamp(2rem, 5vw, 3rem);
-  font-weight: 800;
-  background: var(--gradient-secondary);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  margin-right: 0.5rem;
-  display: inline-block;
-  animation: numberPulse 2s ease-in-out infinite;
-}
-
-@keyframes numberPulse {
-  0%, 100% {
-    filter: drop-shadow(0 0 10px rgba(240, 147, 251, 0.3));
-  }
-  50% {
-    filter: drop-shadow(0 0 20px rgba(240, 147, 251, 0.6));
-  }
-}
-
-.label {
-  font-size: 1.2rem;
-  color: var(--text-primary);
-  font-weight: 600;
-  letter-spacing: -0.01em;
-}
-
-.fetch-info {
-  font-size: 1rem;
-  color: var(--text-muted);
-  display: block;
-  margin-top: 0.5rem;
-  font-weight: 500;
-}
-
 .controls {
   display: flex;
   gap: 2rem;
@@ -552,14 +499,6 @@
     gap: 1.5rem;
   }
   
-  .count {
-    font-size: clamp(1.75rem, 8vw, 2.5rem);
-  }
-  
-  .label {
-    font-size: 1.1rem;
-  }
-  
   .search-input {
     padding: 0.875rem 0.875rem 0.875rem 2.75rem;
     height: 56px; /* Maintain consistent height on mobile */
@@ -574,21 +513,6 @@
 @media (max-width: 480px) {
   .list-header {
     padding: 1.25rem;
-  }
-  
-  .submissions-count {
-    text-align: center;
-  }
-  
-  .label {
-    display: block;
-    margin-top: 0.5rem;
-    font-size: 1rem;
-  }
-  
-  .fetch-info {
-    font-size: 0.9rem;
-    text-align: center;
   }
   
   .controls {

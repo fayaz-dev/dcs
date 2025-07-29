@@ -3,6 +3,7 @@ import type { TagData } from '../types';
 import { SubmissionCard } from './SubmissionCard';
 import { AnnouncementsList } from './AnnouncementsList';
 import { TagInfo } from './TagInfo';
+import { TagHeader } from './TagHeader';
 import './SubmissionsList.css';
 
 interface SubmissionsListProps {
@@ -83,16 +84,6 @@ export const SubmissionsList: React.FC<SubmissionsListProps> = ({
     }
   }, [tagData.submissions, sortBy, searchTerm]);
 
-  const formatFetchDate = (dateString: string) => {
-    return new Date(dateString).toLocaleString('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
-    });
-  };
-
   return (
     <div className="submissions-list">
       {/* Show announcements first if they exist and toggle is enabled */}
@@ -103,17 +94,14 @@ export const SubmissionsList: React.FC<SubmissionsListProps> = ({
         />
       )}
       
+      {/* Tag header card with count */}
+      <TagHeader 
+        tagName={tagData.tag}
+        submissionsCount={sortedSubmissions.length}
+        fetchedAt={tagData.fetchedAt}
+      />
+      
       <div className="list-header">
-        <div className="submissions-count">
-          <span className="count">{sortedSubmissions.length}</span>
-          <span className="label">
-            {sortedSubmissions.length === 1 ? 'submission' : 'submissions'}
-          </span>
-          <span className="fetch-info">
-            • Last updated: {formatFetchDate(tagData.fetchedAt)}
-          </span>
-        </div>
-        
         {/* Sentinel element to detect when to make controls sticky */}
         <div ref={sentinelRef} className="controls-sentinel" />
         
