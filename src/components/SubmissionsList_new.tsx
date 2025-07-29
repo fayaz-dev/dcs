@@ -11,7 +11,7 @@ interface SubmissionsListProps {
   showAnnouncements?: boolean;
 }
 
-type SortOption = 'latest' | 'popular' | 'comments';
+type SortOption = 'latest' | 'popular' | 'comments' | 'relevant';
 
 // Single Controls Component that uses CSS positioning instead of DOM recreation
 const ControlsContent = React.memo<{
@@ -50,6 +50,7 @@ const ControlsContent = React.memo<{
           <option value="latest">🕒 Latest</option>
           <option value="popular">❤️ Most Popular</option>
           <option value="comments">💬 Most Comments</option>
+          <option value="relevant">⭐ Relevant</option>
         </select>
         <div className="sort-dropdown-arrow">
           <svg width="12" height="8" viewBox="0 0 12 8" fill="none">
@@ -99,6 +100,35 @@ export const SubmissionsList: React.FC<SubmissionsListProps> = ({
         return [...filtered].sort((a, b) => b.positive_reactions_count - a.positive_reactions_count);
       case 'comments':
         return [...filtered].sort((a, b) => b.comments_count - a.comments_count);
+      case 'relevant':
+        return [...filtered].sort((a, b) => {
+          // Calculate relevance score (100 points total)
+          const calculateRelevanceScore = (article: any) => {
+            const maxReactions = Math.max(...filtered.map(a => a.positive_reactions_count));
+            const maxComments = Math.max(...filtered.map(a => a.comments_count));
+            
+            // Get the most recent date (edited_at or published_at)
+            const getRecentDate = (article: any) => {
+              const editedDate = article.edited_at ? new Date(article.edited_at).getTime() : 0;
+              const publishedDate = new Date(article.published_at).getTime();
+              return Math.max(editedDate, publishedDate);
+            };
+            
+            const articleRecentDate = getRecentDate(article);
+            const maxRecentDate = Math.max(...filtered.map(getRecentDate));
+            const minRecentDate = Math.min(...filtered.map(getRecentDate));
+            
+            // Calculate scores (avoid division by zero)
+            const reactionScore = maxReactions > 0 ? (article.positive_reactions_count / maxReactions) * 50 : 0;
+            const commentScore = maxComments > 0 ? (article.comments_count / maxComments) * 30 : 0;
+            const recencyScore = maxRecentDate > minRecentDate ? 
+              ((articleRecentDate - minRecentDate) / (maxRecentDate - minRecentDate)) * 20 : 20;
+            
+            return reactionScore + commentScore + recencyScore;
+          };
+          
+          return calculateRelevanceScore(b) - calculateRelevanceScore(a);
+        });
       case 'latest':
       default:
         return [...filtered].sort((a, b) => 

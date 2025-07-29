@@ -1,0 +1,106 @@
+{
+  "tag": "pinatachallenge",
+  "announcements": [
+    {
+      "type_of": "article",
+      "id": 2039542,
+      "title": "Congrats to The Pinata Challenge Winners!",
+      "description": "The time is now! We are excited to announce the winners of the The Pinata Challenge.  From virtual...",
+      "readable_publish_date": "Oct 15 '24",
+      "slug": "congrats-to-the-pinata-challenge-winners-5d2e",
+      "path": "/devteam/congrats-to-the-pinata-challenge-winners-5d2e",
+      "url": "https://dev.to/devteam/congrats-to-the-pinata-challenge-winners-5d2e",
+      "comments_count": 12,
+      "public_reactions_count": 51,
+      "collection_id": null,
+      "published_timestamp": "2024-10-15T17:26:29Z",
+      "language": "en",
+      "subforem_id": null,
+      "positive_reactions_count": 51,
+      "cover_image": "https://media2.dev.to/dynamic/image/width=1000,height=420,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Farticles%2Fcraf9qsv7c2sayugswxz.png",
+      "social_image": "https://media2.dev.to/dynamic/image/width=1000,height=500,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Farticles%2Fcraf9qsv7c2sayugswxz.png",
+      "canonical_url": "https://dev.to/devteam/congrats-to-the-pinata-challenge-winners-5d2e",
+      "created_at": "2024-10-15T17:25:56Z",
+      "edited_at": null,
+      "crossposted_at": null,
+      "published_at": "2024-10-15T17:26:29Z",
+      "last_comment_at": "2025-06-13T19:27:43Z",
+      "reading_time_minutes": 2,
+      "tag_list": [
+        "devchallenge",
+        "pinatachallenge",
+        "webdev",
+        "api"
+      ],
+      "tags": "devchallenge, pinatachallenge, webdev, api",
+      "user": {
+        "name": "dev.to staff",
+        "username": "thepracticaldev",
+        "twitter_username": "ThePracticalDev",
+        "github_username": null,
+        "user_id": 3,
+        "website_url": "https://dev.to",
+        "profile_image": "https://media2.dev.to/dynamic/image/width=640,height=640,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Fuser%2Fprofile_image%2F3%2F13d3b32a-d381-4549-b95e-ec665768ce8f.png",
+        "profile_image_90": "https://media2.dev.to/dynamic/image/width=90,height=90,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Fuser%2Fprofile_image%2F3%2F13d3b32a-d381-4549-b95e-ec665768ce8f.png"
+      },
+      "organization": {
+        "name": "The DEV Team",
+        "username": "devteam",
+        "slug": "devteam",
+        "profile_image": "https://media2.dev.to/dynamic/image/width=640,height=640,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Forganization%2Fprofile_image%2F1%2Fd908a186-5651-4a5a-9f76-15200bc6801f.jpg",
+        "profile_image_90": "https://media2.dev.to/dynamic/image/width=90,height=90,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Forganization%2Fprofile_image%2F1%2Fd908a186-5651-4a5a-9f76-15200bc6801f.jpg"
+      }
+    },
+    {
+      "type_of": "article",
+      "id": 2017454,
+      "title": "Join us for The Pinata Challenge: $3,000 in Prizes!",
+      "description": "We are so excited to team up with Pinata to bring you our next DEV challenge.   Running through...",
+      "readable_publish_date": "Oct 2 '24",
+      "slug": "join-us-for-the-the-pinata-challenge-3000-in-prizes-59cb",
+      "path": "/devteam/join-us-for-the-the-pinata-challenge-3000-in-prizes-59cb",
+      "url": "https://dev.to/devteam/join-us-for-the-the-pinata-challenge-3000-in-prizes-59cb",
+      "comments_count": 31,
+      "public_reactions_count": 150,
+      "collection_id": null,
+      "published_timestamp": "2024-10-02T13:13:26Z",
+      "language": "en",
+      "subforem_id": null,
+      "positive_reactions_count": 150,
+      "cover_image": "https://media2.dev.to/dynamic/image/width=1000,height=420,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Farticles%2Fi29ve2756dmyxn7b5tuj.png",
+      "social_image": "https://media2.dev.to/dynamic/image/width=1000,height=500,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Farticles%2Fi29ve2756dmyxn7b5tuj.png",
+      "canonical_url": "https://dev.to/devteam/join-us-for-the-the-pinata-challenge-3000-in-prizes-59cb",
+      "created_at": "2024-09-27T15:09:18Z",
+      "edited_at": "2024-10-03T15:37:41Z",
+      "crossposted_at": null,
+      "published_at": "2024-10-02T13:13:26Z",
+      "last_comment_at": "2025-06-13T19:27:42Z",
+      "reading_time_minutes": 3,
+      "tag_list": [
+        "devchallenge",
+        "pinatachallenge",
+        "webdev",
+        "api"
+      ],
+      "tags": "devchallenge, pinatachallenge, webdev, api",
+      "user": {
+        "name": "dev.to staff",
+        "username": "thepracticaldev",
+        "twitter_username": "ThePracticalDev",
+        "github_username": null,
+        "user_id": 3,
+        "website_url": "https://dev.to",
+        "profile_image": "https://media2.dev.to/dynamic/image/width=640,height=640,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Fuser%2Fprofile_image%2F3%2F13d3b32a-d381-4549-b95e-ec665768ce8f.png",
+        "profile_image_90": "https://media2.dev.to/dynamic/image/width=90,height=90,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Fuser%2Fprofile_image%2F3%2F13d3b32a-d381-4549-b95e-ec665768ce8f.png"
+      },
+      "organization": {
+        "name": "The DEV Team",
+        "username": "devteam",
+        "slug": "devteam",
+        "profile_image": "https://media2.dev.to/dynamic/image/width=640,height=640,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Forganization%2Fprofile_image%2F1%2Fd908a186-5651-4a5a-9f76-15200bc6801f.jpg",
+        "profile_image_90": "https://media2.dev.to/dynamic/image/width=90,height=90,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Forganization%2Fprofile_image%2F1%2Fd908a186-5651-4a5a-9f76-15200bc6801f.jpg"
+      }
+    }
+  ],
+  "fetchedAt": "2025-07-29T17:05:02.939Z"
+}
