@@ -10,7 +10,7 @@ interface AnnouncementsListProps {
 
 export const AnnouncementsList: React.FC<AnnouncementsListProps> = ({ 
   announcements, 
-  tagName 
+  tagName
 }) => {
   if (!announcements || announcements.length === 0) {
     return null;
@@ -35,7 +35,11 @@ export const AnnouncementsList: React.FC<AnnouncementsListProps> = ({
       
       <div className="announcements-grid">
         {sortedAnnouncements.map((announcement) => (
-          <AnnouncementCard key={announcement.id} article={announcement} />
+          <AnnouncementCard 
+            key={announcement.id} 
+            article={announcement} 
+            isHiddenByDefault={true}
+          />
         ))}
       </div>
     </div>

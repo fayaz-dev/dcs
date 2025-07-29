@@ -19,7 +19,7 @@ function App() {
     refreshTags
   } = useSubmissionData();
 
-  const [showAnnouncements, setShowAnnouncements] = useState(true);
+  const [showAnnouncements, setShowAnnouncements] = useState(false);
 
   return (
     <div className="app">

@@ -190,11 +190,11 @@ export const SubmissionsList: React.FC<SubmissionsListProps> = ({
 
   return (
     <div className="submissions-list">
-      {/* Show announcements first if they exist and toggle is enabled */}
+      {/* Show announcements if they exist and toggle is enabled */}
       {showAnnouncements && tagData.announcements && tagData.announcements.length > 0 && (
         <AnnouncementsList 
           announcements={tagData.announcements} 
-          tagName={tagData.tag} 
+          tagName={tagData.tag}
         />
       )}
       
