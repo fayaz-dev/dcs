@@ -549,6 +549,17 @@
   text-transform: lowercase;
   font-family: ui-monospace, SFMono-Regular, "SF Mono", Monaco, Consolas, monospace;
   white-space: nowrap;
+  display: inline-block;
+}
+
+.tag-link {
+  text-decoration: none;
+  color: inherit;
+}
+
+.tag-link:focus {
+  outline: 2px solid var(--accent-primary);
+  outline-offset: 2px;
 }
 
 .tag-chip::before {

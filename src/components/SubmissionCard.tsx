@@ -85,9 +85,16 @@ export const SubmissionCard: React.FC<SubmissionCardProps> = ({ article, current
                 })
                 .slice(0, 4)
                 .map((tag) => (
-                  <span key={tag} className="tag-chip">
-                    {tag}
-                  </span>
+                  <a 
+                    key={tag} 
+                    href={`https://dev.to/t/${tag}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="tag-chip tag-link"
+                    title={`Browse ${tag} posts on DEV Community`}
+                  >
+                    #{tag}
+                  </a>
                 ))}
               {article.tag_list.filter((tag) => {
                 const lowerTag = tag.toLowerCase();
