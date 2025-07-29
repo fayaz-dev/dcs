@@ -25,9 +25,6 @@ function App() {
       <header className="app-header">
         <HeroImage />
         <h1 className="app-title">Dev Challenge Submissions</h1>
-        <p className="app-description">
-          Challenge submissions from dev.to
-        </p>
       </header>
 
       <main className="app-main">
