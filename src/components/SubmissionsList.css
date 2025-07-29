@@ -40,13 +40,20 @@
   gap: 2rem;
   align-items: flex-end;
   flex-wrap: wrap;
-  animation: slideInLeft 0.8s ease-out 0.5s both;
   transition: var(--transition-normal);
+  will-change: transform, opacity;
+  transform-origin: center;
+}
+
+.controls.initial-animate {
+  animation: slideInLeft 0.8s ease-out 0.5s both;
 }
 
 .controls-container {
   position: relative;
   transition: var(--transition-normal);
+  isolation: isolate;
+  contain: layout style;
 }
 
 .controls-container.sticky {
@@ -65,7 +72,7 @@
 }
 
 .controls-container.sticky.animate-in {
-  animation: stickySlideDown 0.3s ease-out;
+  animation: stickySlideDown 0.3s ease-out forwards;
 }
 
 .controls-container.sticky::before {
@@ -90,6 +97,8 @@
 
 .controls-spacer {
   transition: var(--transition-normal);
+  opacity: 0;
+  pointer-events: none;
 }
 
 @keyframes stickySlideDown {

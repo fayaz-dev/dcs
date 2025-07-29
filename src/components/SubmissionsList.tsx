@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { createPortal } from 'react-dom';
 import type { TagData } from '../types';
 import { SubmissionCard } from './SubmissionCard';
@@ -14,6 +14,56 @@ interface SubmissionsListProps {
 
 type SortOption = 'latest' | 'popular' | 'comments';
 
+// Memoized Controls Component to prevent unnecessary re-renders
+const ControlsContent = React.memo<{
+  tagName: string;
+  searchTerm: string;
+  sortBy: SortOption;
+  onSearchChange: (value: string) => void;
+  onSortChange: (value: SortOption) => void;
+  showInitialAnimation?: boolean;
+}>(({ tagName, searchTerm, sortBy, onSearchChange, onSortChange, showInitialAnimation = false }) => (
+  <div className={`controls ${showInitialAnimation ? 'initial-animate' : ''}`}>
+    <TagInfo tagName={tagName} />
+    
+    <div className="search-box">
+      <input
+        type="text"
+        placeholder="Search submissions..."
+        value={searchTerm}
+        onChange={(e) => onSearchChange(e.target.value)}
+        className="search-input"
+      />
+    </div>
+    
+    <div className="sort-controls">
+      <span className="sort-label">
+        <span className="sort-icon">⚡</span>
+        Sort by
+      </span>
+      <div className="sort-dropdown-wrapper">
+        <select
+          id="sort-select"
+          value={sortBy}
+          onChange={(e) => onSortChange(e.target.value as SortOption)}
+          className="sort-select"
+        >
+          <option value="latest">🕒 Latest</option>
+          <option value="popular">❤️ Most Popular</option>
+          <option value="comments">💬 Most Comments</option>
+        </select>
+        <div className="sort-dropdown-arrow">
+          <svg width="12" height="8" viewBox="0 0 12 8" fill="none">
+            <path d="M1 1.5L6 6.5L11 1.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </div>
+));
+
+ControlsContent.displayName = 'ControlsContent';
+
 export const SubmissionsList: React.FC<SubmissionsListProps> = ({ 
   tagData, 
   showAnnouncements = true 
@@ -23,9 +73,49 @@ export const SubmissionsList: React.FC<SubmissionsListProps> = ({
   const [isSticky, setIsSticky] = useState(false);
   const [controlsHeight, setControlsHeight] = useState(100);
   const [hasAnimated, setHasAnimated] = useState(false);
+  const [initialAnimationComplete, setInitialAnimationComplete] = useState(false);
   
   const controlsContainerRef = useRef<HTMLDivElement>(null);
   const sentinelRef = useRef<HTMLDivElement>(null);
+
+  // Memoized callbacks to prevent child re-renders
+  const handleSearchChange = useCallback((value: string) => {
+    setSearchTerm(value);
+  }, []);
+
+  const handleSortChange = useCallback((value: SortOption) => {
+    setSortBy(value);
+  }, []);
+
+  // Memoized sorted submissions to prevent recalculation on unrelated renders
+  const sortedSubmissions = React.useMemo(() => {
+    let filtered = tagData.submissions.filter(article =>
+      article.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      article.description?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      article.user.name.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+
+    switch (sortBy) {
+      case 'popular':
+        return [...filtered].sort((a, b) => b.positive_reactions_count - a.positive_reactions_count);
+      case 'comments':
+        return [...filtered].sort((a, b) => b.comments_count - a.comments_count);
+      case 'latest':
+      default:
+        return [...filtered].sort((a, b) => 
+          new Date(b.published_at).getTime() - new Date(a.published_at).getTime()
+        );
+    }
+  }, [tagData.submissions, sortBy, searchTerm]);
+
+  // Mark initial animation as complete after component mounts
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setInitialAnimationComplete(true);
+    }, 1300); // Animation duration + delay (0.8s + 0.5s)
+    
+    return () => clearTimeout(timer);
+  }, []);
 
   useEffect(() => {
     const sentinel = sentinelRef.current;
@@ -72,75 +162,28 @@ export const SubmissionsList: React.FC<SubmissionsListProps> = ({
       observer.disconnect();
       window.removeEventListener('resize', handleResize);
     };
-  }, [isSticky]);
+  }, [isSticky, hasAnimated]); // Added hasAnimated as dependency
 
-  const sortedSubmissions = React.useMemo(() => {
-    let filtered = tagData.submissions.filter(article =>
-      article.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      article.description?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      article.user.name.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-
-    switch (sortBy) {
-      case 'popular':
-        return [...filtered].sort((a, b) => b.positive_reactions_count - a.positive_reactions_count);
-      case 'comments':
-        return [...filtered].sort((a, b) => b.comments_count - a.comments_count);
-      case 'latest':
-      default:
-        return [...filtered].sort((a, b) => 
-          new Date(b.published_at).getTime() - new Date(a.published_at).getTime()
-        );
-    }
-  }, [tagData.submissions, sortBy, searchTerm]);
-
-  // Sticky controls component rendered via portal
-  const StickyControls = () => {
+  // Memoized sticky controls component to prevent re-renders
+  const StickyControls = React.memo(() => {
     if (!isSticky) return null;
     
     return createPortal(
-      <div className={`controls-container sticky ${!hasAnimated ? 'animate-in' : ''}`}>
-        <div className="controls">
-          <TagInfo tagName={tagData.tag} />
-          
-          <div className="search-box">
-            <input
-              type="text"
-              placeholder="Search submissions..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="search-input"
-            />
-          </div>
-          
-          <div className="sort-controls">
-            <span className="sort-label">
-              <span className="sort-icon">⚡</span>
-              Sort by
-            </span>
-            <div className="sort-dropdown-wrapper">
-              <select
-                id="sort-select"
-                value={sortBy}
-                onChange={(e) => setSortBy(e.target.value as SortOption)}
-                className="sort-select"
-              >
-                <option value="latest">🕒 Latest</option>
-                <option value="popular">❤️ Most Popular</option>
-                <option value="comments">💬 Most Comments</option>
-              </select>
-              <div className="sort-dropdown-arrow">
-                <svg width="12" height="8" viewBox="0 0 12 8" fill="none">
-                  <path d="M1 1.5L6 6.5L11 1.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                </svg>
-              </div>
-            </div>
-          </div>
-        </div>
+      <div className={`controls-container sticky ${hasAnimated ? 'animate-in' : ''}`}>
+        <ControlsContent
+          tagName={tagData.tag}
+          searchTerm={searchTerm}
+          sortBy={sortBy}
+          onSearchChange={handleSearchChange}
+          onSortChange={handleSortChange}
+          showInitialAnimation={false}
+        />
       </div>,
       document.body
     );
-  };
+  });
+
+  StickyControls.displayName = 'StickyControls';
 
   return (
     <div className="submissions-list">
@@ -172,44 +215,14 @@ export const SubmissionsList: React.FC<SubmissionsListProps> = ({
           
           {/* Regular controls - only show when not sticky */}
           {!isSticky && (
-            <div className="controls">
-              {/* Tag info with dev.to link */}
-              <TagInfo tagName={tagData.tag} />
-              
-              <div className="search-box">
-                <input
-                  type="text"
-                  placeholder="Search submissions..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="search-input"
-                />
-              </div>
-              
-              <div className="sort-controls">
-                <span className="sort-label">
-                  <span className="sort-icon">⚡</span>
-                  Sort by
-                </span>
-                <div className="sort-dropdown-wrapper">
-                  <select
-                    id="sort-select"
-                    value={sortBy}
-                    onChange={(e) => setSortBy(e.target.value as SortOption)}
-                    className="sort-select"
-                  >
-                    <option value="latest">🕒 Latest</option>
-                    <option value="popular">❤️ Most Popular</option>
-                    <option value="comments">💬 Most Comments</option>
-                  </select>
-                  <div className="sort-dropdown-arrow">
-                    <svg width="12" height="8" viewBox="0 0 12 8" fill="none">
-                      <path d="M1 1.5L6 6.5L11 1.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                    </svg>
-                  </div>
-                </div>
-              </div>
-            </div>
+            <ControlsContent
+              tagName={tagData.tag}
+              searchTerm={searchTerm}
+              sortBy={sortBy}
+              onSearchChange={handleSearchChange}
+              onSortChange={handleSortChange}
+              showInitialAnimation={!initialAnimationComplete}
+            />
           )}
           
           {/* Sentinel element placed at the bottom of controls to detect when user scrolls past */}
