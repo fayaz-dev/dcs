@@ -54,13 +54,27 @@ export const SubmissionCard: React.FC<SubmissionCardProps> = ({ article }) => {
         
         <footer className="card-footer">
           <div className="author-section">
-            <img 
-              src={article.user.profile_image_90} 
-              alt={article.user.name}
-              className="author-avatar"
-            />
+            <a 
+              href={`https://dev.to/${article.user.username}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="author-avatar-link"
+            >
+              <img 
+                src={article.user.profile_image_90} 
+                alt={article.user.name}
+                className="author-avatar"
+              />
+            </a>
             <div className="author-details">
-              <span className="author-name">{article.user.name}</span>
+              <a 
+                href={`https://dev.to/${article.user.username}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="author-name-link"
+              >
+                <span className="author-name">{article.user.name}</span>
+              </a>
               <time className="publish-date" dateTime={article.published_at}>
                 {formatDate(article.published_at)}
               </time>
