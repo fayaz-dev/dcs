@@ -3,6 +3,14 @@
   animation: slideInDown 0.6s ease-out;
 }
 
+.tag-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+}
+
 @keyframes slideInDown {
   from {
     opacity: 0;
@@ -134,7 +142,6 @@
   font-weight: 500;
   cursor: pointer;
   transition: var(--transition-normal);
-  margin-bottom: 2rem;
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
@@ -142,6 +149,81 @@
   backdrop-filter: blur(16px);
   position: relative;
   overflow: hidden;
+}
+
+/* Announcements toggle styles in TagSelector */
+.tag-selector .announcements-toggle {
+  display: flex;
+  align-items: center;
+}
+
+.tag-selector .toggle-button {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1rem 1rem;
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  background: var(--card-bg);
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: var(--transition-normal);
+  backdrop-filter: blur(16px);
+  box-shadow: var(--shadow-sm);
+  white-space: nowrap;
+  height: 56px; /* Match back button height */
+}
+
+.tag-selector .toggle-button:hover {
+  border-color: var(--border-hover);
+  background: var(--card-bg-hover);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+
+.tag-selector .toggle-button.active {
+  background: var(--gradient-primary);
+  color: white;
+  border-color: transparent;
+  box-shadow: var(--shadow-glow);
+}
+
+.tag-selector .toggle-button.active:hover {
+  background: var(--gradient-primary);
+  opacity: 0.9;
+}
+
+.tag-selector .toggle-icon {
+  font-size: 1rem;
+  transition: var(--transition-normal);
+}
+
+.tag-selector .toggle-button.active .toggle-icon {
+  animation: bounce 0.5s ease-in-out;
+}
+
+@keyframes bounce {
+  0%, 20%, 60%, 100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-4px);
+  }
+  80% {
+    transform: translateY(-2px);
+  }
+}
+
+.tag-selector .toggle-text {
+  font-weight: 600;
+}
+
+.tag-selector .announcement-count {
+  font-size: 0.8rem;
+  opacity: 0.8;
+  font-weight: 500;
 }
 
 .back-button::before {
@@ -232,9 +314,23 @@
     font-size: 1rem;
   }
   
+  .tag-header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.75rem;
+  }
+  
   .back-button {
     padding: 0.75rem 1.25rem;
     font-size: 0.95rem;
+    justify-content: center;
+  }
+  
+  .tag-selector .toggle-button {
+    justify-content: center;
+    padding: 0.75rem 1rem;
+    font-size: 0.85rem;
+    height: auto;
   }
   
   .selected-tag {

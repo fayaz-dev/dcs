@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useSubmissionData } from './hooks/useSubmissionData';
 import { TagSelector } from './components/TagSelector';
 import { SubmissionsList } from './components/SubmissionsList';
@@ -17,6 +18,8 @@ function App() {
     selectTag,
     refreshTags
   } = useSubmissionData();
+
+  const [showAnnouncements, setShowAnnouncements] = useState(true);
 
   return (
     <div className="app">
@@ -49,10 +52,17 @@ function App() {
               onTagSelect={selectTag}
               onBackToTags={() => selectTag(null)}
               loading={loading}
+              hasAnnouncements={tagData?.announcements && tagData.announcements.length > 0}
+              showAnnouncements={showAnnouncements}
+              onToggleAnnouncements={() => setShowAnnouncements(!showAnnouncements)}
+              announcementsCount={tagData?.announcements?.length || 0}
             />
 
             {tagData && (
-              <SubmissionsList tagData={tagData} />
+              <SubmissionsList 
+                tagData={tagData} 
+                showAnnouncements={showAnnouncements}
+              />
             )}
           </>
         )}

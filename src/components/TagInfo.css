@@ -1,0 +1,123 @@
+.tag-info {
+  display: flex;
+  align-items: center;
+}
+
+.tag-info-button {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1rem 1rem;
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  background: var(--card-bg);
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: var(--transition-normal);
+  backdrop-filter: blur(16px);
+  box-shadow: var(--shadow-sm);
+  white-space: nowrap;
+  height: 56px; /* Match search input height */
+}
+
+.tag-info-button:hover {
+  border-color: var(--border-hover);
+  background: var(--card-bg-hover);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+  color: var(--text-primary);
+}
+
+.tag-info-button:active {
+  transform: translateY(0);
+  background: var(--gradient-accent);
+  color: white;
+  border-color: transparent;
+  box-shadow: var(--shadow-glow);
+}
+
+.tag-info-icon {
+  font-size: 1rem;
+  transition: var(--transition-normal);
+}
+
+.tag-info-button:hover .tag-info-icon {
+  animation: tagWiggle 0.5s ease-in-out;
+}
+
+@keyframes tagWiggle {
+  0%, 20%, 60%, 100% {
+    transform: rotate(0deg);
+  }
+  40% {
+    transform: rotate(-10deg);
+  }
+  80% {
+    transform: rotate(5deg);
+  }
+}
+
+.tag-info-text {
+  font-weight: 600;
+}
+
+.tag-info-name {
+  font-size: 1.2rem;
+  opacity: 0.8;
+  font-weight: 500;
+  background: var(--gradient-primary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.tag-info-button:hover .tag-info-name {
+  opacity: 1;
+  background: var(--gradient-secondary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.tag-info-button:active .tag-info-name {
+  background: white;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+  .tag-info-button {
+    justify-content: center;
+    padding: 1rem;
+    font-size: 0.85rem;
+    height: auto;
+    gap: 0.4rem;
+  }
+  
+  .tag-info-text {
+    font-size: 0.85rem;
+  }
+  
+  .tag-info-name {
+    font-size: 0.95rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .tag-info-button {
+    padding: 0.875rem;
+    font-size: 0.8rem;
+  }
+  
+  .tag-info-text {
+    font-size: 0.8rem;
+  }
+  
+  .tag-info-name {
+    font-size: 0.7rem;
+  }
+}

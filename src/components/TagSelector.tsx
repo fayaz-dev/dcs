@@ -7,6 +7,11 @@ interface TagSelectorProps {
   onTagSelect: (tag: string) => void;
   onBackToTags: () => void;
   loading: boolean;
+  // New props for announcements toggle
+  hasAnnouncements?: boolean;
+  showAnnouncements?: boolean;
+  onToggleAnnouncements?: () => void;
+  announcementsCount?: number;
 }
 
 export const TagSelector: React.FC<TagSelectorProps> = ({
@@ -14,18 +19,43 @@ export const TagSelector: React.FC<TagSelectorProps> = ({
   selectedTag,
   onTagSelect,
   onBackToTags,
-  loading
+  loading,
+  hasAnnouncements = false,
+  showAnnouncements = true,
+  onToggleAnnouncements,
+  announcementsCount = 0
 }) => {
   if (selectedTag) {
     return (
       <div className="tag-selector">
-        <button 
-          className="back-button" 
-          onClick={onBackToTags}
-          disabled={loading}
-        >
-          ← Back to Tags
-        </button>
+        <div className="tag-header">
+          <button 
+            className="back-button" 
+            onClick={onBackToTags}
+            disabled={loading}
+          >
+            ← Back to Tags
+          </button>
+          
+          {hasAnnouncements && onToggleAnnouncements && (
+            <div className="announcements-toggle">
+              <button
+                type="button"
+                onClick={onToggleAnnouncements}
+                className={`toggle-button ${showAnnouncements ? 'active' : ''}`}
+                aria-label={showAnnouncements ? 'Hide announcements' : 'Show announcements'}
+                disabled={loading}
+              >
+                <span className="toggle-icon">📢</span>
+                <span className="toggle-text">
+                  {showAnnouncements ? 'Hide' : 'Show'} Announcements
+                </span>
+                <span className="announcement-count">({announcementsCount})</span>
+              </button>
+            </div>
+          )}
+        </div>
+        
         <h2 className="selected-tag">
           Submissions for: <span className="tag-name">#{selectedTag}</span>
         </h2>

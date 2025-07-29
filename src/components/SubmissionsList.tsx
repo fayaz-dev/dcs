@@ -2,18 +2,22 @@ import React, { useState } from 'react';
 import type { TagData } from '../types';
 import { SubmissionCard } from './SubmissionCard';
 import { AnnouncementsList } from './AnnouncementsList';
+import { TagInfo } from './TagInfo';
 import './SubmissionsList.css';
 
 interface SubmissionsListProps {
   tagData: TagData;
+  showAnnouncements?: boolean;
 }
 
 type SortOption = 'latest' | 'popular' | 'comments';
 
-export const SubmissionsList: React.FC<SubmissionsListProps> = ({ tagData }) => {
+export const SubmissionsList: React.FC<SubmissionsListProps> = ({ 
+  tagData, 
+  showAnnouncements = true 
+}) => {
   const [sortBy, setSortBy] = useState<SortOption>('latest');
   const [searchTerm, setSearchTerm] = useState('');
-  const [showAnnouncements, setShowAnnouncements] = useState(true);
 
   const sortedSubmissions = React.useMemo(() => {
     let filtered = tagData.submissions.filter(article =>
@@ -67,23 +71,8 @@ export const SubmissionsList: React.FC<SubmissionsListProps> = ({ tagData }) => 
         </div>
         
         <div className="controls">
-          {/* Announcements toggle */}
-          {tagData.announcements && tagData.announcements.length > 0 && (
-            <div className="announcements-toggle">
-              <button
-                type="button"
-                onClick={() => setShowAnnouncements(!showAnnouncements)}
-                className={`toggle-button ${showAnnouncements ? 'active' : ''}`}
-                aria-label={showAnnouncements ? 'Hide announcements' : 'Show announcements'}
-              >
-                <span className="toggle-icon">📢</span>
-                <span className="toggle-text">
-                  {showAnnouncements ? 'Hide' : 'Show'} Announcements
-                </span>
-                <span className="announcement-count">({tagData.announcements.length})</span>
-              </button>
-            </div>
-          )}
+          {/* Tag info with dev.to link */}
+          <TagInfo tagName={tagData.tag} />
           
           <div className="search-box">
             <input
