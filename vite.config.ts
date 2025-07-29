@@ -12,5 +12,10 @@ export default defineConfig({
   },
   build: {
     copyPublicDir: true
+  },
+  // Enable SPA routing fallback
+  preview: {
+    port: 4173,
+    strictPort: true,
   }
 })

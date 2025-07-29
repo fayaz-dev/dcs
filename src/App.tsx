@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route, useParams, useNavigate } from 'react-router-dom';
 import { useSubmissionData } from './hooks/useSubmissionData';
 import { TagSelector } from './components/TagSelector';
 import { SubmissionsList } from './components/SubmissionsList';
@@ -8,7 +9,11 @@ import { ThemeToggle } from './components/ThemeToggle';
 import { HeroImage } from './components/HeroImage';
 import './App.css';
 
-function App() {
+// Main app content component that handles tag-based routing
+function AppContent() {
+  const { tag } = useParams<{ tag?: string }>();
+  const navigate = useNavigate();
+  
   const {
     selectedTag,
     availableTags,
@@ -17,9 +22,38 @@ function App() {
     tagData,
     selectTag,
     refreshTags
-  } = useSubmissionData();
+  } = useSubmissionData(tag);
 
   const [showAnnouncements, setShowAnnouncements] = useState(false);
+
+  // Handle URL changes and sync with selected tag
+  useEffect(() => {
+    if (tag && tag !== selectedTag) {
+      // URL has a tag but it's different from current selection
+      selectTag(tag);
+    } else if (!tag && selectedTag) {
+      // URL has no tag but we have a selection, clear it
+      selectTag(null);
+    }
+  }, [tag, selectedTag, selectTag]);
+
+  // Check if the URL tag is valid when available tags are loaded
+  useEffect(() => {
+    if (tag && availableTags.length > 0 && !availableTags.includes(tag)) {
+      // Invalid tag in URL, redirect to home
+      navigate('/');
+    }
+  }, [tag, availableTags, navigate]);
+
+  // Handle tag selection with URL navigation
+  const handleTagSelect = (newTag: string) => {
+    navigate(`/${newTag}`);
+  };
+
+  // Handle back to tags with URL navigation
+  const handleBackToTags = () => {
+    navigate('/');
+  };
 
   return (
     <div className="app">
@@ -49,8 +83,8 @@ function App() {
             <TagSelector
               tags={availableTags}
               selectedTag={selectedTag}
-              onTagSelect={selectTag}
-              onBackToTags={() => selectTag(null)}
+              onTagSelect={handleTagSelect}
+              onBackToTags={handleBackToTags}
               loading={loading}
               hasAnnouncements={tagData?.announcements && tagData.announcements.length > 0}
               showAnnouncements={showAnnouncements}
@@ -62,6 +96,7 @@ function App() {
               <SubmissionsList 
                 tagData={tagData} 
                 showAnnouncements={showAnnouncements}
+                availableTags={availableTags}
               />
             )}
           </>
@@ -82,6 +117,17 @@ function App() {
         </p>
       </footer>
     </div>
+  );
+}
+
+function App() {
+  return (
+    <Router>
+      <Routes>
+        <Route path="/" element={<AppContent />} />
+        <Route path="/:tag" element={<AppContent />} />
+      </Routes>
+    </Router>
   );
 }
 

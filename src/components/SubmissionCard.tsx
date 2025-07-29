@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import type { ForemArticle } from '../types';
 import './SubmissionCard.css';
 import placeholderCover from '../assets/placeholder-cover.svg';
@@ -6,15 +7,34 @@ import placeholderCover from '../assets/placeholder-cover.svg';
 interface SubmissionCardProps {
   article: ForemArticle;
   currentTag: string;
+  availableTags?: string[];
 }
 
-export const SubmissionCard: React.FC<SubmissionCardProps> = ({ article, currentTag }) => {
+export const SubmissionCard: React.FC<SubmissionCardProps> = ({ article, currentTag, availableTags = [] }) => {
+  const navigate = useNavigate();
+  
+  // Use provided available tags, fallback to known challenge tags
+  const challengeTags = availableTags.length > 0 ? availableTags : [
+    'algoliachallenge', 'alibabachallenge', 'assemblyaichallenge', 
+    'brightdatachallenge', 'hacktoberfestchallenge', 'permitchallenge',
+    'pinatachallenge', 'postmarkchallenge'
+  ];
+
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('en-US', {
       year: 'numeric',
       month: 'long',
       day: 'numeric'
     });
+  };
+
+  const handleTagClick = (tag: string, e: React.MouseEvent) => {
+    const tagLower = tag.toLowerCase();
+    if (challengeTags.includes(tagLower)) {
+      e.preventDefault();
+      navigate(`/${tagLower}`);
+    }
+    // If not a challenge tag, let the default behavior (external link) happen
   };
 
   return (
@@ -87,11 +107,12 @@ export const SubmissionCard: React.FC<SubmissionCardProps> = ({ article, current
                 .map((tag) => (
                   <a 
                     key={tag} 
-                    href={`https://dev.to/t/${tag}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
+                    href={challengeTags.includes(tag.toLowerCase()) ? `/${tag.toLowerCase()}` : `https://dev.to/t/${tag}`}
+                    target={challengeTags.includes(tag.toLowerCase()) ? '_self' : '_blank'}
+                    rel={challengeTags.includes(tag.toLowerCase()) ? undefined : 'noopener noreferrer'}
                     className="tag-chip tag-link"
-                    title={`Browse ${tag} posts on DEV Community`}
+                    title={challengeTags.includes(tag.toLowerCase()) ? `Browse ${tag} submissions` : `Browse ${tag} posts on DEV Community`}
+                    onClick={(e) => handleTagClick(tag, e)}
                   >
                     #{tag}
                   </a>

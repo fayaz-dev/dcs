@@ -1,42 +1,15 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import type { TagData, AppState } from '../types';
 
-export function useSubmissionData() {
+export function useSubmissionData(initialTag?: string) {
   const [state, setState] = useState<AppState>({
-    selectedTag: null,
+    selectedTag: initialTag || null,
     availableTags: [],
     loading: true,
     error: null
   });
 
   const [tagData, setTagData] = useState<Map<string, TagData>>(new Map());
-
-  // Load available tags
-  useEffect(() => {
-    loadAvailableTags();
-    
-    // Set up polling to check for updates
-    const interval = setInterval(async () => {
-      try {
-        const response = await fetch('/data/.refresh');
-        if (response.ok) {
-          const timestamp = await response.text();
-          const lastCheck = localStorage.getItem('lastDataCheck');
-          
-          if (!lastCheck || timestamp !== lastCheck) {
-            localStorage.setItem('lastDataCheck', timestamp);
-            await loadAvailableTags();
-            // Clear cached tag data to force reload
-            setTagData(new Map());
-          }
-        }
-      } catch {
-        // Silent fail - polling is optional
-      }
-    }, 2000); // Check every 2 seconds
-    
-    return () => clearInterval(interval);
-  }, []);
 
   const loadAvailableTags = async () => {
     try {
@@ -62,7 +35,7 @@ export function useSubmissionData() {
     }
   };
 
-  const loadTagSubmissions = async (tag: string) => {
+  const loadTagSubmissions = useCallback(async (tag: string) => {
     // Check if we already have this data
     if (tagData.has(tag)) {
       setState(prev => ({ ...prev, selectedTag: tag }));
@@ -103,7 +76,44 @@ export function useSubmissionData() {
         error: error instanceof Error ? error.message : `Failed to load submissions for ${tag}` 
       }));
     }
-  };
+  }, [tagData]);
+
+  // Load available tags
+  useEffect(() => {
+    loadAvailableTags();
+    
+    // Set up polling to check for updates
+    const interval = setInterval(async () => {
+      try {
+        const response = await fetch('/data/.refresh');
+        if (response.ok) {
+          const timestamp = await response.text();
+          const lastCheck = localStorage.getItem('lastDataCheck');
+          
+          if (!lastCheck || timestamp !== lastCheck) {
+            localStorage.setItem('lastDataCheck', timestamp);
+            await loadAvailableTags();
+            // Clear cached tag data to force reload
+            setTagData(new Map());
+          }
+        }
+      } catch {
+        // Silent fail - polling is optional
+      }
+    }, 2000); // Check every 2 seconds
+    
+    return () => clearInterval(interval);
+  }, []);
+
+  // Load initial tag data if provided
+  useEffect(() => {
+    if (initialTag && !tagData.has(initialTag) && state.availableTags.length > 0) {
+      // Only try to load if the tag exists in available tags
+      if (state.availableTags.includes(initialTag)) {
+        loadTagSubmissions(initialTag);
+      }
+    }
+  }, [initialTag, state.availableTags, tagData, loadTagSubmissions]);
 
   const selectTag = (tag: string | null) => {
     if (tag === null) {

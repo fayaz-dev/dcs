@@ -10,6 +10,7 @@ import './SubmissionsList.css';
 interface SubmissionsListProps {
   tagData: TagData;
   showAnnouncements?: boolean;
+  availableTags?: string[];
 }
 
 type SortOption = 'latest' | 'popular' | 'comments' | 'relevant';
@@ -67,7 +68,8 @@ ControlsContent.displayName = 'ControlsContent';
 
 export const SubmissionsList: React.FC<SubmissionsListProps> = ({ 
   tagData, 
-  showAnnouncements = true 
+  showAnnouncements = true,
+  availableTags = []
 }) => {
   const [sortBy, setSortBy] = useState<SortOption>('relevant');
   const [searchTerm, setSearchTerm] = useState('');
@@ -239,7 +241,12 @@ export const SubmissionsList: React.FC<SubmissionsListProps> = ({
       ) : (
         <div className="submissions-grid">
           {sortedSubmissions.map((article) => (
-            <SubmissionCard key={article.id} article={article} currentTag={tagData.tag} />
+            <SubmissionCard 
+              key={article.id} 
+              article={article} 
+              currentTag={tagData.tag} 
+              availableTags={availableTags}
+            />
           ))}
         </div>
       )}
