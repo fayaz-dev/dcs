@@ -106,7 +106,7 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.75rem 1rem;
+  padding: 1rem 1rem;
   border: 1px solid var(--border-color);
   border-radius: 12px;
   background: var(--card-bg);
@@ -118,6 +118,7 @@
   backdrop-filter: blur(16px);
   box-shadow: var(--shadow-sm);
   white-space: nowrap;
+  height: 56px; /* Match search input height */
 }
 
 .toggle-button:hover {
@@ -210,6 +211,8 @@
   box-shadow: var(--shadow-sm);
   backdrop-filter: blur(16px);
   font-weight: 500;
+  height: 56px; /* Explicit height for consistency */
+  box-sizing: border-box;
 }
 
 .search-input:focus {
@@ -231,11 +234,13 @@
   gap: 1rem;
   white-space: nowrap;
   background: var(--card-bg);
-  padding: 0.75rem 1.5rem;
+  padding: 1rem 1.5rem;
   border-radius: 12px;
   border: 1px solid var(--border-color);
   backdrop-filter: blur(16px);
   box-shadow: var(--shadow-sm);
+  height: 56px; /* Match other controls height */
+  box-sizing: border-box;
 }
 
 .sort-controls label {
@@ -245,7 +250,7 @@
 }
 
 .sort-select {
-  padding: 0.75rem 1rem;
+  padding: 0.5rem 1rem;
   border: 1px solid var(--border-color);
   border-radius: 10px;
   background: var(--bg-primary);
@@ -255,6 +260,7 @@
   transition: var(--transition-normal);
   font-weight: 500;
   min-width: 140px;
+  height: 36px; /* Adjust to fit within parent container */
 }
 
 .sort-select option {
@@ -377,6 +383,7 @@
     justify-content: center;
     padding: 1rem;
     font-size: 0.95rem;
+    height: 56px; /* Maintain consistent height on mobile */
   }
   
   .search-box {
@@ -386,6 +393,7 @@
   .sort-controls {
     justify-content: space-between;
     padding: 1rem 1.25rem;
+    height: 56px; /* Maintain consistent height on mobile */
   }
   
   .submissions-grid {
@@ -403,6 +411,7 @@
   
   .search-input {
     padding: 0.875rem 0.875rem 0.875rem 2.75rem;
+    height: 56px; /* Maintain consistent height on mobile */
   }
   
   .search-box::before {
@@ -440,6 +449,7 @@
     align-items: stretch;
     gap: 0.75rem;
     padding: 1rem;
+    height: auto; /* Allow flexible height when in column layout */
   }
   
   .sort-controls label {
@@ -448,10 +458,12 @@
   
   .sort-select {
     min-width: unset;
+    height: 36px; /* Maintain select height */
   }
   
   .search-input {
     font-size: 0.95rem;
+    height: 56px; /* Maintain consistent height on small mobile */
   }
   
   .no-results {
