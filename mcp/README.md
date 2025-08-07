@@ -110,7 +110,7 @@ pnpm run mcp:build
 **Using TypeScript (development):**
 ```json
 {
-  "mcpServers": {
+  "servers": {
     "dev-challenge-submissions": {
       "command": "tsx",
       "args": ["mcp/server.ts"],
@@ -123,7 +123,7 @@ pnpm run mcp:build
 **Using JavaScript (production):**
 ```json
 {
-  "mcpServers": {
+  "servers": {
     "dev-challenge-submissions": {
       "command": "/path/to/your/dcs/project/mcp/server"
     }
