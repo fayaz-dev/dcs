@@ -102,7 +102,15 @@ export const SubmissionsList: React.FC<SubmissionsListProps> = ({
 
   // Memoized sorted submissions to prevent recalculation on unrelated renders
   const sortedSubmissions = React.useMemo(() => {
-    let filtered = tagData.submissions.filter(article =>
+    // First deduplicate by ID to ensure no duplicates
+    const uniqueSubmissions = tagData.submissions.reduce((acc, submission) => {
+      if (!acc.find(s => s.id === submission.id)) {
+        acc.push(submission);
+      }
+      return acc;
+    }, [] as typeof tagData.submissions);
+
+    let filtered = uniqueSubmissions.filter(article =>
       article.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
       article.description?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       article.user.name.toLowerCase().includes(searchTerm.toLowerCase())
@@ -240,9 +248,9 @@ export const SubmissionsList: React.FC<SubmissionsListProps> = ({
         </div>
       ) : (
         <div className="submissions-grid">
-          {sortedSubmissions.map((article) => (
+          {sortedSubmissions.map((article, index) => (
             <SubmissionCard 
-              key={article.id} 
+              key={`${article.id}-${index}`} 
               article={article} 
               currentTag={tagData.tag} 
               availableTags={availableTags}

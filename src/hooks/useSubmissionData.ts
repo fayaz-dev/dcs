@@ -57,6 +57,16 @@ export function useSubmissionData(initialTag?: string) {
           
           const data: TagData = await response.json();
           
+          // Deduplicate submissions by ID to prevent React key conflicts
+          const uniqueSubmissions = data.submissions.reduce((acc, submission) => {
+            if (!acc.find(s => s.id === submission.id)) {
+              acc.push(submission);
+            }
+            return acc;
+          }, [] as typeof data.submissions);
+          
+          data.submissions = uniqueSubmissions;
+          
           // Try to load announcements separately if they exist
           try {
             const announcementsResponse = await fetch(`/data/${tag}-announcements.json`);
