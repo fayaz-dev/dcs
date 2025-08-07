@@ -6,6 +6,7 @@ import { SubmissionsList } from './components/SubmissionsList';
 import { LoadingSpinner } from './components/LoadingSpinner';
 import { ErrorDisplay } from './components/ErrorDisplay';
 import { ThemeToggle } from './components/ThemeToggle';
+import { RefreshButton } from './components/RefreshButton';
 import { HeroImage } from './components/HeroImage';
 import './App.css';
 
@@ -21,7 +22,8 @@ function AppContent() {
     error,
     tagData,
     selectTag,
-    refreshTags
+    refreshTags,
+    manualRefresh
   } = useSubmissionData(tag);
 
   const [showAnnouncements, setShowAnnouncements] = useState(false);
@@ -58,6 +60,11 @@ function AppContent() {
   return (
     <div className="app">
       <ThemeToggle />
+      <RefreshButton 
+        onRefresh={manualRefresh} 
+        disabled={loading}
+        className="header-refresh"
+      />
       
       <header className="app-header">
         <HeroImage />

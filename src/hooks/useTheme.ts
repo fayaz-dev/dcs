@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react';
+import { safeGetItem, safeSetItem } from '../utils/localStorage';
 
 export type Theme = 'light' | 'dark' | 'system';
 
 export const useTheme = () => {
   const [theme, setTheme] = useState<Theme>(() => {
-    const savedTheme = localStorage.getItem('theme') as Theme;
+    const savedTheme = safeGetItem('theme') as Theme;
     return savedTheme || 'system';
   });
 
@@ -48,7 +49,7 @@ export const useTheme = () => {
 
   const setThemeAndSave = (newTheme: Theme) => {
     setTheme(newTheme);
-    localStorage.setItem('theme', newTheme);
+    safeSetItem('theme', newTheme);
   };
 
   return {

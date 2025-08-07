@@ -1,4 +1,5 @@
 import type { ForemArticle } from '../types';
+import { safeGetItem, safeSetItem, safeRemoveItem, safeIterateKeys } from './localStorage';
 
 interface RelevanceData {
   articleId: number;
@@ -80,7 +81,7 @@ function calculateRelevanceScores(submissions: ForemArticle[]): Map<number, numb
 function loadCachedScores(tag: string, dataHash: string): Map<number, number> | null {
   try {
     const storageKey = STORAGE_KEY_PREFIX + tag;
-    const cached = localStorage.getItem(storageKey);
+    const cached = safeGetItem(storageKey);
     
     if (!cached) return null;
     
@@ -126,7 +127,7 @@ function saveCachedScores(tag: string, dataHash: string, scores: Map<number, num
       timestamp: Date.now()
     };
     
-    localStorage.setItem(storageKey, JSON.stringify(cachedData));
+    safeSetItem(storageKey, JSON.stringify(cachedData));
   } catch (error) {
     console.warn('Failed to save relevance scores to cache:', error);
   }
@@ -161,11 +162,10 @@ export function clearExpiredCache(): void {
     const keysToRemove: string[] = [];
     const now = Date.now();
     
-    for (let i = 0; i < localStorage.length; i++) {
-      const key = localStorage.key(i);
-      if (key && key.startsWith(STORAGE_KEY_PREFIX)) {
+    safeIterateKeys((key) => {
+      if (key.startsWith(STORAGE_KEY_PREFIX)) {
         try {
-          const cached = localStorage.getItem(key);
+          const cached = safeGetItem(key);
           if (cached) {
             const cachedData: CachedRelevanceData = JSON.parse(cached);
             const cacheAge = (now - cachedData.timestamp) / (1000 * 60 * 60); // hours
@@ -179,9 +179,9 @@ export function clearExpiredCache(): void {
           keysToRemove.push(key);
         }
       }
-    }
+    });
     
-    keysToRemove.forEach(key => localStorage.removeItem(key));
+    keysToRemove.forEach(key => safeRemoveItem(key));
   } catch (error) {
     console.warn('Failed to clear expired cache:', error);
   }

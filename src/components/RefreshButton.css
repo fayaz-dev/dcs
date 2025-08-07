@@ -1,0 +1,76 @@
+.refresh-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border: none;
+  border-radius: 8px;
+  background: var(--color-card-bg);
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.refresh-button:hover:not(:disabled) {
+  background: var(--color-hover);
+  color: var(--color-text-primary);
+  transform: scale(1.05);
+}
+
+.refresh-button:active:not(:disabled) {
+  transform: scale(0.95);
+}
+
+.refresh-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.refresh-button.refreshing .refresh-icon {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.refresh-icon {
+  transition: transform 0.2s ease;
+}
+
+/* Position when used in header */
+.refresh-button.header-refresh {
+  position: absolute;
+  top: 20px;
+  right: 150px; /* Leave space for theme toggle */
+  z-index: 10;
+}
+
+@media (max-width: 768px) {
+  .refresh-button.header-refresh {
+    right: 120px; /* Adjust for mobile theme toggle */
+    top: 15px;
+    width: 36px;
+    height: 36px;
+  }
+  
+  .refresh-button.header-refresh .refresh-icon {
+    width: 18px;
+    height: 18px;
+  }
+}
+
+@media (max-width: 480px) {
+  .refresh-button.header-refresh {
+    right: 100px; /* Further adjustment for very small screens */
+  }
+}
