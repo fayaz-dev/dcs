@@ -10,7 +10,7 @@ interface SubmissionCardProps {
   availableTags?: string[];
 }
 
-export const SubmissionCard: React.FC<SubmissionCardProps> = ({ article, currentTag, availableTags = [] }) => {
+export const SubmissionCard: React.FC<SubmissionCardProps> = React.memo(({ article, currentTag, availableTags = [] }) => {
   const navigate = useNavigate();
   
   // Use provided available tags, fallback to known challenge tags
@@ -217,4 +217,4 @@ export const SubmissionCard: React.FC<SubmissionCardProps> = ({ article, current
       </div>
     </article>
   );
-};
+});

@@ -37,15 +37,16 @@ export function useSubmissionData(initialTag?: string) {
   }, []);
 
   const loadTagSubmissions = useCallback(async (tag: string) => {
-    // Check if we already have this data using ref to avoid dependency
+    // Check if we already have this data
     setTagData(prev => {
       if (prev.has(tag)) {
+        // Data exists in cache, just update selectedTag without loading state
         setState(state => ({ ...state, selectedTag: tag }));
         return prev;
       }
       
-      // Start loading if we don't have the data
-      setState(state => ({ ...state, loading: true, error: null }));
+      // Data doesn't exist, start loading
+      setState(state => ({ ...state, loading: true, error: null, selectedTag: tag }));
       
       // Async loading
       (async () => {
@@ -81,7 +82,6 @@ export function useSubmissionData(initialTag?: string) {
           setTagData(prevData => new Map(prevData).set(tag, data));
           setState(prevState => ({ 
             ...prevState, 
-            selectedTag: tag, 
             loading: false 
           }));
         } catch (error) {
@@ -103,7 +103,7 @@ export function useSubmissionData(initialTag?: string) {
   }, [loadAvailableTags]);
 
   // Manual refresh function for the refresh button
-  const manualRefresh = useCallback(async () => {
+  const manualRefresh = useCallback(async (): Promise<void> => {
     try {
       const response = await fetch('/data/.refresh');
       if (response.ok) {
@@ -113,7 +113,7 @@ export function useSubmissionData(initialTag?: string) {
         // Initialize lastCheck with current timestamp on first run to avoid immediate reload
         if (lastCheck === null) {
           safeSetItem('lastDataCheck', timestamp);
-          return false; // No reload needed on first run
+          return; // No reload needed on first run
         }
         
         if (timestamp !== lastCheck) {
@@ -121,25 +121,25 @@ export function useSubmissionData(initialTag?: string) {
           await loadAvailableTags();
           // Clear cached tag data to force reload
           setTagData(new Map());
-          return true; // Reload occurred
         }
       }
-      return false; // No reload needed
     } catch {
       // Silent fail - polling is optional
-      return false;
     }
   }, [loadAvailableTags]);
 
-  // Load initial tag data if provided
+  // Load initial tag data if provided - with better conditional logic
   useEffect(() => {
     if (initialTag && state.availableTags.length > 0) {
-      // Only try to load if the tag exists in available tags
-      if (state.availableTags.includes(initialTag)) {
+      // Only try to load if the tag exists in available tags and we don't already have it
+      if (state.availableTags.includes(initialTag) && !tagData.has(initialTag)) {
         loadTagSubmissions(initialTag);
+      } else if (state.availableTags.includes(initialTag) && tagData.has(initialTag)) {
+        // Tag exists and data is cached, just update the selected tag
+        setState(prev => ({ ...prev, selectedTag: initialTag }));
       }
     }
-  }, [initialTag, state.availableTags.length, loadTagSubmissions]);
+  }, [initialTag, state.availableTags.length, loadTagSubmissions, tagData]);
 
   const selectTag = (tag: string | null) => {
     if (tag === null) {

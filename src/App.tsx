@@ -32,20 +32,24 @@ function AppContent() {
   useEffect(() => {
     if (tag && tag !== selectedTag) {
       // URL has a tag but it's different from current selection
-      selectTag(tag);
+      // Check if the URL tag is valid when available tags are loaded
+      if (availableTags.length > 0) {
+        if (availableTags.includes(tag)) {
+          selectTag(tag);
+        } else {
+          // Invalid tag in URL, redirect to home
+          navigate('/');
+        }
+      } else {
+        // Tags not loaded yet, wait for them to be loaded
+        // This will be handled when availableTags is populated
+        selectTag(tag);
+      }
     } else if (!tag && selectedTag) {
       // URL has no tag but we have a selection, clear it
       selectTag(null);
     }
-  }, [tag, selectedTag, selectTag]);
-
-  // Check if the URL tag is valid when available tags are loaded
-  useEffect(() => {
-    if (tag && availableTags.length > 0 && !availableTags.includes(tag)) {
-      // Invalid tag in URL, redirect to home
-      navigate('/');
-    }
-  }, [tag, availableTags, navigate]);
+  }, [tag, selectedTag, selectTag, availableTags, navigate]);
 
   // Handle tag selection with URL navigation
   const handleTagSelect = (newTag: string) => {

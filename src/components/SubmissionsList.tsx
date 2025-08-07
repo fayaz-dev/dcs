@@ -66,7 +66,7 @@ const ControlsContent = React.memo<{
 
 ControlsContent.displayName = 'ControlsContent';
 
-export const SubmissionsList: React.FC<SubmissionsListProps> = ({ 
+export const SubmissionsList = React.memo<SubmissionsListProps>(({ 
   tagData, 
   showAnnouncements = true,
   availableTags = []
@@ -77,7 +77,6 @@ export const SubmissionsList: React.FC<SubmissionsListProps> = ({
   const [controlsHeight, setControlsHeight] = useState(100);
   const [hasAnimated, setHasAnimated] = useState(false);
   const [initialAnimationComplete, setInitialAnimationComplete] = useState(false);
-  const [relevanceScores, setRelevanceScores] = useState<Map<number, number>>(new Map());
   
   const controlsContainerRef = useRef<HTMLDivElement>(null);
   const sentinelRef = useRef<HTMLDivElement>(null);
@@ -91,14 +90,15 @@ export const SubmissionsList: React.FC<SubmissionsListProps> = ({
     setSortBy(value);
   }, []);
 
-  // Precompute relevance scores when submissions change
-  useEffect(() => {
-    const scores = getRelevanceScores(tagData.tag, tagData.submissions);
-    setRelevanceScores(scores);
-    
-    // Clear expired cache on component mount
-    clearExpiredCache();
+  // Memoized relevance scores to prevent unnecessary recalculation
+  const relevanceScores = React.useMemo(() => {
+    return getRelevanceScores(tagData.tag, tagData.submissions);
   }, [tagData.tag, tagData.submissions]);
+
+  // Clear expired cache only on component mount
+  useEffect(() => {
+    clearExpiredCache();
+  }, []);
 
   // Memoized sorted submissions to prevent recalculation on unrelated renders
   const sortedSubmissions = React.useMemo(() => {
@@ -248,9 +248,9 @@ export const SubmissionsList: React.FC<SubmissionsListProps> = ({
         </div>
       ) : (
         <div className="submissions-grid">
-          {sortedSubmissions.map((article, index) => (
+          {sortedSubmissions.map((article) => (
             <SubmissionCard 
-              key={`${article.id}-${index}`} 
+              key={article.id} 
               article={article} 
               currentTag={tagData.tag} 
               availableTags={availableTags}
@@ -260,4 +260,6 @@ export const SubmissionsList: React.FC<SubmissionsListProps> = ({
       )}
     </div>
   );
-};
+});
+
+SubmissionsList.displayName = 'SubmissionsList';
