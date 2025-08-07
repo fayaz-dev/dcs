@@ -8,6 +8,7 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
+    "deploy": "npx wrangler pages deploy",
     "cli": "tsx cli/index.ts",
     "fetch": "tsx cli/index.ts",
     "update": "tsx cli/index.ts update",
