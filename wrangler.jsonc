@@ -1,0 +1,10 @@
+{
+  // Optional schema for IDE intellisense
+  "$schema": "node_modules/wrangler/config-schema.json",
+
+  // Match your existing Cloudflare Pages project name
+  "name": "dtcs",
+
+  // Tell Wrangler where your *prebuilt* static files live
+  "pages_build_output_dir": "./dist"
+}
