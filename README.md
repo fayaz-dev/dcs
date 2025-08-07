@@ -50,8 +50,18 @@ This will:
 ```bash
 pnpm run dev
 ```
-
 The web app will be available at `http://localhost:5173`
+
+### 4. Setup the local MCP Server
+
+```sh
+# first build the mcp server
+pnpm run mcp:build
+```
+
+Then use the [`mcp.json`](./.vscode/mcp.json) file in your VSCode + GitHub Copilot setup (with proper path to the mcp executable file) to utilize the dcs MCP server.
+
+MCP details are in [dcs MCP README](./mcp/README.md).
 
 ## Usage
 
