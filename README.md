@@ -4,6 +4,12 @@ A modern web application for browsing dev challenge submissions from dev.to. Thi
 
 ![React web interface demo](https://github.com/user-attachments/assets/03fc5b73-e23a-4760-a3a4-daf7d86631d5)
 
+## Roadmap / Todo list:
+- [ ] More detailed hands on tutorial about using this project effectively.
+- [ ] Daily auto update of Challenge submissions.
+- [ ] Filtering out unrelated posts that uses the Challenge tags.
+- [ ] FullStack Web App with option to use your own LLM API key for unique project brainstorming.
+
 ## Features
 
 - **CLI Tool**: Fetch, update, and manage submissions from dev.to using the Forem API
